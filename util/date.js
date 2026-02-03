@@ -3,7 +3,5 @@ export function getFormattedDate(date) {
 }
 
 export function getDateMinusDays(date, days) {
-  const newDate = new Date(date);
-  newDate.setDate(newDate.getDate() - days);
-  return newDate;
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate() - days);
 }
