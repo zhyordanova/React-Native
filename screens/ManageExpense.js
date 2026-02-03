@@ -1,4 +1,4 @@
-import { useContext, useLayoutEffect, useState } from "react";
+import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 import IconButton from "../UI/IconButton";
@@ -6,14 +6,11 @@ import { GlobalStyles } from "../constants/styles";
 import { ExpenseContext } from "../store/expense-contex";
 import ExpenseForm from "../componets/ManageExpenses/ExpenseForm";
 import { deleteExpense, storeExpense, updateExpense } from "../util/http";
-import LoadingOverlay from "../UI/LoadingOverlay";
-import ErrorOverlay from "../UI/ErrorOverlay";
+import { UIContext } from "../store/ui-context";
 
 function ManageExpense({ route, navigation }) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState();
-
   const expensesCtx = useContext(ExpenseContext);
+  const { setLoading, setError, clearError } = useContext(UIContext);
 
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -29,7 +26,8 @@ function ManageExpense({ route, navigation }) {
   }, [navigation, isEditing]);
 
   async function deleteExpenseHandler() {
-    setIsSubmitting(true);
+    setLoading(true);
+    clearError();
 
     try {
       await deleteExpense(editedExpenseId);
@@ -37,7 +35,8 @@ function ManageExpense({ route, navigation }) {
       navigation.goBack();
     } catch (error) {
       setError("Could not delete expense - please try again later!");
-      setIsSubmitting(false);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -46,7 +45,8 @@ function ManageExpense({ route, navigation }) {
   }
 
   async function confirmHandler(expenseData) {
-    setIsSubmitting(true);
+    setLoading(true);
+    clearError();
 
     try {
       if (isEditing) {
@@ -59,21 +59,9 @@ function ManageExpense({ route, navigation }) {
       navigation.goBack();
     } catch (error) {
       setError("Could not save data - please try again later!");
-      setIsSubmitting(false);
-      return;
+    } finally {
+      setLoading(false);
     }
-  }
-
-  function errorHandler() {
-    setError(null);
-  }
-
-  if (error && !isSubmitting) {
-    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
-  }
-
-  if (isSubmitting) {
-    return <LoadingOverlay />;
   }
 
   return (

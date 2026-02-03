@@ -13,6 +13,8 @@ import RecentExpenses from "./screens/RecentExpenses";
 import { GlobalStyles } from "./constants/styles";
 import IconButton from "./UI/IconButton";
 import ExpenseContextProvider from "./store/expense-contex";
+import UIContextProvider from "./store/ui-context";
+import GlobalUIOverlay from "./UI/GlobalUIOverlay";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -67,29 +69,32 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <ExpenseContextProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-              headerTintColor: "white",
-            }}
-          >
-            <Stack.Screen
-              name="ExpensesOverview"
-              component={ExpensesOverview}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name="ManageExpense"
-              component={ManageExpense}
-              options={{
-                presentation: "modal",
+      <UIContextProvider>
+        <ExpenseContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
+                headerTintColor: "white",
               }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </ExpenseContextProvider>
+            >
+              <Stack.Screen
+                name="ExpensesOverview"
+                component={ExpensesOverview}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="ManageExpense"
+                component={ManageExpense}
+                options={{
+                  presentation: "modal",
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ExpenseContextProvider>
+        <GlobalUIOverlay />
+      </UIContextProvider>
     </>
   );
 }
