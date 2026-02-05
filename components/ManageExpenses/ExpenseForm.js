@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { View, StyleSheet, Text } from "react-native";
 
-import Input from "./Input";
 import Button from "../../UI/Button";
+import Input from "../../UI/Input";
 import { getFormattedDate } from "../../util/date";
 import { GlobalStyles } from "../../constants/styles";
 
@@ -50,14 +50,35 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
     };
   }
 
-  function inputChangeHandler(inputIdentifier, enteredValue) {
-    setInputs((curInputs) => {
-      return {
-        ...curInputs,
-        [inputIdentifier]: { value: enteredValue, isValid: true, error: "" },
-      };
-    });
-  }
+  const debounceTimerRef = useRef(null);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  const inputChangeHandler = useCallback((inputIdentifier, enteredValue) => {
+    // Immediately update the input value for responsive UI
+    setInputs((curInputs) => ({
+      ...curInputs,
+      [inputIdentifier]: { value: enteredValue, isValid: true, error: "" },
+    }));
+
+    // Clear existing debounce timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Debounce validation for better performance (only validates after user stops typing)
+    debounceTimerRef.current = setTimeout(() => {
+      // Optional: Add real-time validation here if needed
+      // For now, validation only happens on submit
+    }, 300);
+  }, []);
 
   function submitHandler() {
     const expenseData = {

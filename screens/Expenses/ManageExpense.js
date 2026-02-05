@@ -1,12 +1,12 @@
 import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
-import IconButton from "../UI/IconButton";
-import { GlobalStyles } from "../constants/styles";
-import { ExpenseContext } from "../store/expense-contex";
-import ExpenseForm from "../componets/ManageExpenses/ExpenseForm";
-import { deleteExpense, storeExpense, updateExpense } from "../util/http";
-import { UIContext } from "../store/ui-context";
+import IconButton from "../../UI/IconButton";
+import { GlobalStyles } from "../../constants/styles";
+import { ExpenseContext } from "../../store/expense-context";
+import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
+import { deleteExpense, storeExpense, updateExpense } from "../../util/http";
+import { UIContext } from "../../store/ui-context";
 
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpenseContext);

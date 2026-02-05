@@ -1,4 +1,10 @@
-import { createContext, useReducer, useCallback, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useReducer,
+  useCallback,
+  useMemo,
+} from "react";
 
 export const ExpenseContext = createContext({
   expenses: [],
@@ -7,6 +13,14 @@ export const ExpenseContext = createContext({
   deleteExpense: (id) => {},
   updateExpense: (id, { description, amount, date }) => {},
 });
+
+export function useExpense() {
+  const context = useContext(ExpenseContext);
+  if (!context) {
+    throw new Error("useExpense must be used within ExpenseContextProvider");
+  }
+  return context;
+}
 
 function expenseReducer(state, action) {
   switch (action.type) {

@@ -1,3 +1,4 @@
+import React from "react";
 import { View, Pressable, Text, StyleSheet } from "react-native";
 import { GlobalStyles } from "../constants/styles";
 
@@ -7,6 +8,8 @@ function Button({ children, onPress, mode, style }) {
       <Pressable
         onPress={onPress}
         style={({ pressed }) => pressed && styles.pressed}
+        accessibilityRole="button"
+        accessibilityLabel={children}
       >
         <View style={[styles.button, mode === "flat" && styles.flat]}>
           <Text style={[styles.buttonText, mode === "flat" && styles.flatText]}>
@@ -18,7 +21,7 @@ function Button({ children, onPress, mode, style }) {
   );
 }
 
-export default Button;
+export default React.memo(Button);
 
 const styles = StyleSheet.create({
   button: {

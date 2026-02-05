@@ -1,11 +1,14 @@
+import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-function IconButton({ icon, size, color, onPress }) {
+function IconButton({ icon, size, color, onPress, accessibilityLabel }) {
   return (
     <Pressable
       onPress={onPress}
       style={({ pressed }) => pressed && styles.pressed}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
     >
       <View style={styles.buttonContainer}>
         <Ionicons name={icon} size={size} color={color} />
@@ -14,7 +17,7 @@ function IconButton({ icon, size, color, onPress }) {
   );
 }
 
-export default IconButton;
+export default React.memo(IconButton);
 
 const styles = StyleSheet.create({
   buttonContainer: {

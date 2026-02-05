@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import React from "react";
 
 import { GlobalStyles } from "../../constants/styles";
 import { getFormattedDate } from "../../util/date";
@@ -9,7 +10,7 @@ function ExpensesItem({ id, description, amount, date }) {
 
   function expensePressHandler() {
     navigation.navigate("ManageExpense", {
-        expenseId: id,
+      expenseId: id,
     });
   }
 
@@ -17,6 +18,9 @@ function ExpensesItem({ id, description, amount, date }) {
     <Pressable
       onPress={expensePressHandler}
       style={({ pressed }) => pressed && styles.pressed}
+      accessibilityRole="button"
+      accessibilityLabel={`${description} expense`}
+      accessibilityHint={`$${amount.toFixed(2)} on ${getFormattedDate(date)}`}
     >
       <View style={styles.expenseItem}>
         <View>
@@ -33,7 +37,7 @@ function ExpensesItem({ id, description, amount, date }) {
   );
 }
 
-export default ExpensesItem;
+export default React.memo(ExpensesItem);
 
 const styles = StyleSheet.create({
   pressed: {
