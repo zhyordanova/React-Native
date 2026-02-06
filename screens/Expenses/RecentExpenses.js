@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react";
 
+import { STRINGS } from "../../constants/strings";
 import ExpensesOutput from "../../components/ExpensesOutput/ExpensesOutput";
 import { getDateMinusDays } from "../../util/date";
 import { fetchExpenses } from "../../util/http";
@@ -19,7 +20,7 @@ function RecentExpenses() {
         const fetchedExpenses = await fetchExpenses();
         setExpenses(fetchedExpenses);
       } catch (error) {
-        setError("Could not fetch expenses!");
+        setError(STRINGS.errors.fetchFailed);
       }
 
       setLoading(false);
@@ -40,8 +41,8 @@ function RecentExpenses() {
   return (
     <ExpensesOutput
       expenses={recentExpenses}
-      expensesPeriod="Last 7 Days"
-      fallbackText="No expenses registered for the last 7 days."
+      expensesPeriod={STRINGS.expense.period.last7Days}
+      fallbackText={STRINGS.expense.empty.recent}
     />
   );
 }

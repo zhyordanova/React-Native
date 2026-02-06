@@ -1,15 +1,19 @@
 import React from "react";
 import { View, Pressable, Text, StyleSheet } from "react-native";
+
 import { GlobalStyles } from "../constants/styles";
 
 function Button({ children, onPress, mode, style }) {
+  // Extract string from children for accessibility label
+  const accessibilityLabel = typeof children === 'string' ? children : 'Button';
+  
   return (
     <View style={style}>
       <Pressable
         onPress={onPress}
         style={({ pressed }) => pressed && styles.pressed}
         accessibilityRole="button"
-        accessibilityLabel={children}
+        accessibilityLabel={accessibilityLabel}
       >
         <View style={[styles.button, mode === "flat" && styles.flat]}>
           <Text style={[styles.buttonText, mode === "flat" && styles.flatText]}>
@@ -33,7 +37,7 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   buttonText: {
-    color: "white",
+    color: GlobalStyles.colors.white,
     textAlign: "center",
   },
   flatText: {

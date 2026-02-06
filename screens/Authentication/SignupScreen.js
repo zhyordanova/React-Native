@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Alert } from "react-native";
 
+import { STRINGS } from "../../constants/strings";
 import AuthContent from "../../components/Auth/AuthContent";
 import { createUser } from "../../util/auth";
 import { useAuth } from "../../store/auth-context";
@@ -22,17 +23,17 @@ function SignupScreen() {
         authData.expirationTime,
       );
     } catch (error) {
-      const errorMessage = error.message || "Sign up failed. Please try again.";
+      const errorMessage = error.message || STRINGS.errors.signupFailed;
       setLastError(error);
 
-      let alertTitle = "Sign Up Failed";
+      let alertTitle = STRINGS.auth.alerts.signupFailed;
       let alertMessage = errorMessage;
-      let alertButtons = [{ text: "OK", onPress: () => {} }];
+      let alertButtons = [{ text: STRINGS.auth.buttons.ok, onPress: () => {} }];
 
       // Add retry button for network errors
       if (error.retry) {
         alertButtons.unshift({
-          text: "Retry",
+          text: STRINGS.auth.buttons.retry,
           onPress: () => signupHandler({ email, password }),
         });
       }

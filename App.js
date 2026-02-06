@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
@@ -7,36 +7,26 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Ionicons } from "@expo/vector-icons";
 
+import { GlobalStyles } from "./constants/styles";
+import { STRINGS } from "./constants/strings";
+import { AppTheme } from "./config/AppTheme";
+import AuthContextProvider, { useAuth } from "./store/auth-context";
+import ExpenseContextProvider from "./store/expense-context";
+import UIContextProvider from "./store/ui-context";
+import GlobalUIOverlay from "./UI/GlobalUIOverlay";
+import IconButton from "./UI/IconButton";
 import ManageExpense from "./screens/Expenses/ManageExpense";
 import AllExpenses from "./screens/Expenses/AllExpenses";
 import RecentExpenses from "./screens/Expenses/RecentExpenses";
 import SignupScreen from "./screens/Authentication/SignupScreen";
 import LoginScreen from "./screens/Authentication/LoginScreen";
-import { GlobalStyles } from "./constants/styles";
-import IconButton from "./UI/IconButton";
-import AuthContextProvider, { useAuth } from "./store/auth-context";
-import UIContextProvider from "./store/ui-context";
-import GlobalUIOverlay from "./UI/GlobalUIOverlay";
-import ExpenseContextProvider from "./store/expense-context";
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
-// Shared screen options
-const authStackScreenOptions = {
-  headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-  headerTintColor: "white",
-  contentStyle: { backgroundColor: GlobalStyles.colors.primary700 },
-};
-
-const authenticatedStackScreenOptions = {
-  headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-  headerTintColor: "white",
-};
-
 function AuthStack() {
   return (
-    <Stack.Navigator screenOptions={authStackScreenOptions}>
+    <Stack.Navigator>
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="Signup" component={SignupScreen} />
     </Stack.Navigator>
@@ -45,7 +35,7 @@ function AuthStack() {
 
 function AuthenticatedStack() {
   return (
-    <Stack.Navigator screenOptions={authenticatedStackScreenOptions}>
+    <Stack.Navigator>
       <Stack.Screen
         name="ExpensesOverview"
         component={ExpensesOverview}
@@ -67,8 +57,6 @@ function ExpensesOverview() {
 
   const screenOptions = useCallback(
     ({ navigation }) => ({
-      headerStyle: { backgroundColor: GlobalStyles.colors.primary500 },
-      headerTintColor: "white",
       tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
       tabBarActiveTintColor: GlobalStyles.colors.accent500,
       headerRight: (tintColor) => (
@@ -77,7 +65,7 @@ function ExpensesOverview() {
           size={24}
           color={tintColor.tintColor}
           onPress={() => navigation.navigate("ManageExpense")}
-          accessibilityLabel="Add new expense"
+          accessibilityLabel={STRINGS.navigation.addExpense}
         />
       ),
       headerLeft: (tintColor) => (
@@ -86,7 +74,7 @@ function ExpensesOverview() {
           size={24}
           color={tintColor.tintColor}
           onPress={() => authCtx.logout()}
-          accessibilityLabel="Logout"
+          accessibilityLabel={STRINGS.navigation.logout}
         />
       ),
     }),
@@ -99,8 +87,8 @@ function ExpensesOverview() {
         name="RecentExpenses"
         component={RecentExpenses}
         options={{
-          title: "Recent Expenses",
-          tabBarLabel: "Recent",
+          title: STRINGS.navigation.recentExpenses,
+          tabBarLabel: STRINGS.navigation.recent,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="hourglass" size={size} color={color} />
           ),
@@ -110,8 +98,8 @@ function ExpensesOverview() {
         name="AllExpenses"
         component={AllExpenses}
         options={{
-          title: "All Expenses",
-          tabBarLabel: "All Expenses",
+          title: STRINGS.navigation.allExpenses,
+          tabBarLabel: STRINGS.navigation.allExpenses,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar" size={size} color={color} />
           ),
@@ -156,6 +144,7 @@ function Navigation() {
 
   return (
     <NavigationContainer
+      theme={AppTheme}
       initialState={initialState}
       onStateChange={onNavigationStateChange}
     >

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-
-import AuthForm from "./AuthForm";
-import { GlobalStyles } from "../../constants/styles";
-import FlatButton from "../../UI/FlatButton";
 import { useNavigation } from "@react-navigation/native";
+
+import { GlobalStyles } from "../../constants/styles";
+import { STRINGS } from "../../constants/strings";
+import AuthForm from "./AuthForm";
+import FlatButton from "../../UI/FlatButton";
 
 function AuthContent({ isLogin, onAuthenticate }) {
   const navigation = useNavigation();
@@ -42,7 +43,7 @@ function AuthContent({ isLogin, onAuthenticate }) {
       !passwordIsValid ||
       (!isLogin && (!emailsAreEqual || !passwordsAreEqual))
     ) {
-      Alert.alert("Invalid input", "Please check your entered credentials.");
+      Alert.alert(STRINGS.auth.alerts.invalidInput, STRINGS.auth.alerts.checkCredentials);
       setCredentialsInvalid({
         email: !emailIsValid,
         confirmEmail: !isLogin && (!emailIsValid || !emailsAreEqual),
@@ -63,7 +64,7 @@ function AuthContent({ isLogin, onAuthenticate }) {
       />
       <View style={styles.buttons}>
         <FlatButton onPress={switchAuthModeHandler}>
-          {isLogin ? "Create a new user" : "Log in instead"}
+          {isLogin ? STRINGS.auth.buttons.createAccount : STRINGS.auth.buttons.switchToLogin}
         </FlatButton>
       </View>
     </View>
@@ -80,7 +81,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: GlobalStyles.colors.primary800,
     elevation: 2,
-    shadowColor: "black",
+    shadowColor: GlobalStyles.colors.black,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.35,
     shadowRadius: 4,

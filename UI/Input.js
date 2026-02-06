@@ -1,11 +1,14 @@
+import { useState } from "react";
 import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+
 import { GlobalStyles } from "../constants/styles";
+
+const { fontSize, fontWeight } = GlobalStyles.typography;
+const { colors, spacing, borderRadius } = GlobalStyles;
 
 function Input({
   label,
-  invalid,
   isInvalid,
   style,
   textInputConfig,
@@ -21,8 +24,7 @@ function Input({
     inputStyles.push(styles.inputMultiline);
   }
 
-  const isInvalidField = invalid || isInvalid;
-  if (isInvalidField) {
+  if (isInvalid) {
     inputStyles.push(styles.invalidInput);
   }
 
@@ -33,7 +35,7 @@ function Input({
 
   return (
     <View style={[styles.inputContainer, style]}>
-      <Text style={[styles.label, isInvalidField && styles.invalidLabel]}>
+      <Text style={[styles.label, isInvalid && styles.invalidLabel]}>
         {label}
       </Text>
       <View style={styles.inputWrapper}>
@@ -58,8 +60,8 @@ function Input({
           >
             <Ionicons
               name={isPasswordVisible ? "eye-off" : "eye"}
-              size={20}
-              color={GlobalStyles.colors.primary700}
+              size={styles.eyeIconSize.size}
+              color={styles.eyeIconColor.color}
             />
           </Pressable>
         )}
@@ -73,25 +75,25 @@ export default Input;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginHorizontal: 4,
-    marginVertical: 8,
+    marginHorizontal: spacing.xs,
+    marginVertical: spacing.md,
   },
   inputWrapper: {
     position: "relative",
   },
   label: {
-    fontSize: 14,
-    marginBottom: 4,
-    color: GlobalStyles.colors.primary100,
-    fontWeight: "500",
+    fontSize: fontSize.regular,
+    marginBottom: spacing.xs,
+    color: colors.primary100,
+    fontWeight: fontWeight.medium,
   },
   input: {
-    backgroundColor: GlobalStyles.colors.primary100,
-    color: GlobalStyles.colors.primary700,
-    paddingVertical: 8,
-    paddingHorizontal: 6,
-    borderRadius: 6,
-    fontSize: 16,
+    backgroundColor: colors.primary100,
+    color: colors.primary700,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.sm,
+    borderRadius: borderRadius.md,
+    fontSize: fontSize.medium,
   },
   passwordInput: {
     paddingRight: 40,
@@ -99,30 +101,36 @@ const styles = StyleSheet.create({
   eyeIcon: {
     position: "absolute",
     right: 10,
-    top: 8,
-    padding: 4,
+    top: spacing.md,
+    padding: spacing.xs,
+  },
+  eyeIconSize: {
+    size: 20,
+  },
+  eyeIconColor: {
+    color: colors.primary700,
   },
   inputMultiline: {
     minHeight: 100,
     textAlignVertical: "top",
   },
   invalidLabel: {
-    color: "#ff6b9d",
-    fontWeight: "600",
+    color: colors.error,
+    fontWeight: fontWeight.semibold,
   },
   invalidInput: {
-    backgroundColor: "#ffd9e8",
-    borderColor: "#ff6b9d",
+    backgroundColor: colors.errorLight,
+    borderColor: colors.error,
     borderWidth: 2,
   },
   errorText: {
-    marginTop: 6,
-    color: "#ff6b9d",
-    fontSize: 13,
-    fontWeight: "600",
-    backgroundColor: "rgba(255, 107, 157, 0.15)",
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 4,
+    marginTop: spacing.sm,
+    color: colors.error,
+    fontSize: fontSize.small,
+    fontWeight: fontWeight.semibold,
+    backgroundColor: colors.errorBackground,
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.sm,
   },
 });

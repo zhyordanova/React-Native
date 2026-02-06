@@ -1,6 +1,8 @@
 import { useContext } from "react";
+
+import { STRINGS } from "../../constants/strings";
 import ExpensesOutput from "../../components/ExpensesOutput/ExpensesOutput";
-import { ExpenseContext } from "../../store/expense-contex";
+import { ExpenseContext } from "../../store/expense-context";
 
 function AllExpenses() {
   const expensesCtx = useContext(ExpenseContext);
@@ -8,8 +10,8 @@ function AllExpenses() {
   return (
     <ExpensesOutput
       expenses={expensesCtx.expenses}
-      expensesPeriod="Total"
-      fallbackText="No registered expenses found!"
+      expensesPeriod={STRINGS.expense.period.total}
+      fallbackText={STRINGS.expense.empty.all}
     />
   );
 }

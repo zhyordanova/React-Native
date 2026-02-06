@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
+import { STRINGS } from "../../constants/strings";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 
@@ -56,7 +57,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
           }}
           isInvalid={emailIsInvalid}
           errorText={
-            emailIsInvalid ? "Please enter a valid email address." : ""
+            emailIsInvalid ? STRINGS.auth.validation.invalidEmail : ""
           }
         />
         {!isLogin && (
@@ -69,7 +70,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
               autoCapitalize: "none",
             }}
             isInvalid={emailsDontMatch}
-            errorText={emailsDontMatch ? "Email addresses do not match." : ""}
+            errorText={emailsDontMatch ? STRINGS.auth.validation.emailMismatch : ""}
           />
         )}
         <Input
@@ -81,7 +82,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
           }}
           isInvalid={passwordIsInvalid}
           errorText={
-            passwordIsInvalid ? "Password must be at least 6 characters." : ""
+            passwordIsInvalid ? STRINGS.auth.validation.passwordLength : ""
           }
         />
         {!isLogin && (
@@ -96,7 +97,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
               secureTextEntry: true,
             }}
             isInvalid={passwordsDontMatch}
-            errorText={passwordsDontMatch ? "Passwords do not match." : ""}
+            errorText={passwordsDontMatch ? STRINGS.auth.validation.passwordMismatch : ""}
           />
         )}
         <View style={styles.buttons}>

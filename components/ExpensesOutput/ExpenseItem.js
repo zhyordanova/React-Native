@@ -1,9 +1,13 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
 import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { GlobalStyles } from "../../constants/styles";
 import { getFormattedDate } from "../../util/date";
-import { useNavigation } from "@react-navigation/native";
+
+
+const { colors, spacing, borderRadius, typography } = GlobalStyles;
+const { fontSize, fontWeight } = typography;
 
 function ExpensesItem({ id, description, amount, date }) {
   const navigation = useNavigation();
@@ -44,37 +48,37 @@ const styles = StyleSheet.create({
     opacity: 0.75,
   },
   expenseItem: {
-    padding: 12,
-    marginVertical: 8,
-    backgroundColor: GlobalStyles.colors.primary500,
+    padding: spacing.lg,
+    marginVertical: spacing.md,
+    backgroundColor: colors.primary500,
     flexDirection: "row",
     justifyContent: "space-between",
-    borderRadius: 6,
+    borderRadius: borderRadius.md,
     elevation: 3,
-    shadowColor: GlobalStyles.colors.gray500,
+    shadowColor: colors.gray500,
     shadowRadius: 4,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.4,
   },
   textBase: {
-    color: GlobalStyles.colors.primary50,
+    color: colors.primary50,
   },
   description: {
-    fontSize: 16,
+    fontSize: typography.fontSize.medium,
     marginBottom: 4,
-    fontWeight: "bold",
+    fontWeight: typography.fontWeight.bold,
   },
   amountContainer: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    backgroundColor: "white",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 4,
+    borderRadius: borderRadius.sm,
     minWidth: 80,
   },
   amount: {
-    color: GlobalStyles.colors.primary500,
-    fontWeight: "bold",
+    color: colors.primary500,
+    fontWeight: typography.fontWeight.bold,
   },
 });

@@ -4,6 +4,14 @@ import { parseError, retryWithBackoff } from "./errorHandler";
 const BACKEDND_URL =
   "https://expensetracker-8f018-default-rtdb.firebaseio.com/";
 
+function throwParsedError(error) {
+  const errorInfo = parseError(error);
+  const err = new Error(errorInfo.message);
+  err.type = errorInfo.type;
+  err.retry = errorInfo.retry;
+  throw err;
+}
+
 export async function storeExpense(expenseData) {
   try {
     const response = await retryWithBackoff(
@@ -14,11 +22,7 @@ export async function storeExpense(expenseData) {
     const id = response.data.name;
     return id;
   } catch (error) {
-    const errorInfo = parseError(error);
-    const err = new Error(errorInfo.message);
-    err.type = errorInfo.type;
-    err.retry = errorInfo.retry;
-    throw err;
+    throwParsedError(error);
   }
 }
 
@@ -44,11 +48,7 @@ export async function fetchExpenses() {
 
     return expenses;
   } catch (error) {
-    const errorInfo = parseError(error);
-    const err = new Error(errorInfo.message);
-    err.type = errorInfo.type;
-    err.retry = errorInfo.retry;
-    throw err;
+    throwParsedError(error);
   }
 }
 
@@ -60,11 +60,7 @@ export async function updateExpense(id, expenseData) {
       1000,
     );
   } catch (error) {
-    const errorInfo = parseError(error);
-    const err = new Error(errorInfo.message);
-    err.type = errorInfo.type;
-    err.retry = errorInfo.retry;
-    throw err;
+    throwParsedError(error);
   }
 }
 
@@ -76,10 +72,6 @@ export async function deleteExpense(id) {
       1000,
     );
   } catch (error) {
-    const errorInfo = parseError(error);
-    const err = new Error(errorInfo.message);
-    err.type = errorInfo.type;
-    err.retry = errorInfo.retry;
-    throw err;
+    throwParsedError(error);
   }
 }
