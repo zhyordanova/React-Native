@@ -1,12 +1,13 @@
 import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
-import IconButton from "../UI/IconButton";
-import { GlobalStyles } from "../constants/styles";
-import { ExpenseContext } from "../store/expense-contex";
-import ExpenseForm from "../componets/ManageExpenses/ExpenseForm";
-import { deleteExpense, storeExpense, updateExpense } from "../util/http";
-import { UIContext } from "../store/ui-context";
+import { STRINGS } from "../../constants/strings";
+import IconButton from "../../UI/IconButton";
+import { GlobalStyles } from "../../constants/styles";
+import { ExpenseContext } from "../../store/expense-context";
+import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
+import { deleteExpense, storeExpense, updateExpense } from "../../util/http";
+import { UIContext } from "../../store/ui-context";
 
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpenseContext);
@@ -21,7 +22,7 @@ function ManageExpense({ route, navigation }) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isEditing ? "Edit Expense" : "Add Expense",
+      title: isEditing ? STRINGS.expense.editTitle : STRINGS.expense.addTitle,
     });
   }, [navigation, isEditing]);
 
@@ -34,7 +35,7 @@ function ManageExpense({ route, navigation }) {
       expensesCtx.deleteExpense(editedExpenseId);
       navigation.goBack();
     } catch (error) {
-      setError("Could not delete expense - please try again later!");
+      setError(STRINGS.errors.deleteFailed);
     } finally {
       setLoading(false);
     }
@@ -58,7 +59,7 @@ function ManageExpense({ route, navigation }) {
       }
       navigation.goBack();
     } catch (error) {
-      setError("Could not save data - please try again later!");
+      setError(STRINGS.errors.saveFailed);
     } finally {
       setLoading(false);
     }

@@ -1,10 +1,14 @@
-import { useState } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { View, StyleSheet, Text } from "react-native";
 
-import Input from "./Input";
-import Button from "../../UI/Button";
 import { getFormattedDate } from "../../util/date";
 import { GlobalStyles } from "../../constants/styles";
+import { STRINGS } from "../../constants/strings";
+import Button from "../../UI/Button";
+import Input from "../../UI/Input";
+
+const { colors, spacing } = GlobalStyles;
+const { fontSize, fontWeight } = GlobalStyles.typography;
 
 function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
   const [inputs, setInputs] = useState({
@@ -37,27 +41,50 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
     return {
       amount: {
         isValid: amountIsValid,
-        error: amountIsValid ? "" : "Enter a positive amount.",
+        error: amountIsValid ? "" : STRINGS.expense.validation.amountPositive,
       },
       date: {
         isValid: dateIsValid,
-        error: dateIsValid ? "" : "Use format YYYY-MM-DD.",
+        error: dateIsValid ? "" : STRINGS.expense.validation.dateFormat,
       },
       description: {
         isValid: descriptionIsValid,
-        error: descriptionIsValid ? "" : "Description is required.",
+        error: descriptionIsValid
+          ? ""
+          : STRINGS.expense.validation.descriptionRequired,
       },
     };
   }
 
-  function inputChangeHandler(inputIdentifier, enteredValue) {
-    setInputs((curInputs) => {
-      return {
-        ...curInputs,
-        [inputIdentifier]: { value: enteredValue, isValid: true, error: "" },
-      };
-    });
-  }
+  const debounceTimerRef = useRef(null);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  const inputChangeHandler = useCallback((inputIdentifier, enteredValue) => {
+    // Immediately update the input value for responsive UI
+    setInputs((curInputs) => ({
+      ...curInputs,
+      [inputIdentifier]: { value: enteredValue, isValid: true, error: "" },
+    }));
+
+    // Clear existing debounce timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Debounce validation for better performance (only validates after user stops typing)
+    debounceTimerRef.current = setTimeout(() => {
+      // Optional: Add real-time validation here if needed
+      // For now, validation only happens on submit
+    }, 300);
+  }, []);
 
   function submitHandler() {
     const expenseData = {
@@ -115,7 +142,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         <Input
           style={styles.rowInput}
           label="Amount"
-          invalid={!inputs.amount.isValid}
+          isInvalid={!inputs.amount.isValid}
           errorText={inputs.amount.error}
           textInputConfig={{
             keyboardType: "decimal-pad",
@@ -126,7 +153,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         <Input
           style={styles.rowInput}
           label="Date"
-          invalid={!inputs.date.isValid}
+          isInvalid={!inputs.date.isValid}
           errorText={inputs.date.error}
           textInputConfig={{
             placeholder: "YYYY-MM-DD",
@@ -138,7 +165,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
       </View>
       <Input
         label="Description"
-        invalid={!inputs.description.isValid}
+        isInvalid={!inputs.description.isValid}
         errorText={inputs.description.error}
         textInputConfig={{
           multiline: true,
@@ -171,10 +198,10 @@ const styles = StyleSheet.create({
   },
   errorText: {
     textAlign: "center",
-    color: GlobalStyles.colors.error500,
-    margin: 8,
-    fontWeight: "800",
-    fontSize: 14,
+    color: colors.error500,
+    margin: spacing.md,
+    fontWeight: fontWeight.extrabold,
+    fontSize: fontSize.regular,
   },
   button: {
     minWidth: 120,
@@ -184,10 +211,10 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-    marginVertical: 24,
+    fontSize: fontSize.xlarge,
+    fontWeight: fontWeight.bold,
+    color: colors.white,
+    marginVertical: spacing.xl,
     textAlign: "center",
   },
   inputsRow: {
