@@ -214,6 +214,13 @@ ExpenseTracker/
 - Screen reader support (VoiceOver/TalkBack)
 - See ACCESSIBILITY.md for full details
 
+✅ **Centralized String Management**
+- All user-facing text in `constants/strings.js` (STRINGS constant)
+- Organized by feature (navigation, expense, auth, errors, buttons)
+- Single source of truth for i18n/localization
+- No hardcoded strings in components
+- Error messages mapped to Firebase error codes
+
 ✅ **Custom Hooks for Consistency**
 - useAuth() for authentication
 - useExpense() for expense operations
