@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from "react";
 
 import { STRINGS } from "../../constants/strings";
-import ExpensesOutput from "../../components/ExpensesOutput/ExpensesOutput";
 import { getDateMinusDays } from "../../util/date";
 import { fetchExpenses } from "../../util/http";
 import { useExpense } from "../../store/expense-context";
 import { useUI } from "../../store/ui-context";
+import ExpensesOutput from "../../components/ExpensesOutput/ExpensesOutput";
 
 function RecentExpenses() {
   const { expenses, setExpenses } = useExpense();

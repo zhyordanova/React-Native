@@ -3,9 +3,10 @@ import { StyleSheet, Text, TextInput, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 import { GlobalStyles } from "../constants/styles";
+import { STRINGS } from "../constants/strings";
 
-const { fontSize, fontWeight } = GlobalStyles.typography;
 const { colors, spacing, borderRadius } = GlobalStyles;
+const { fontSize, fontWeight } = GlobalStyles.typography;
 
 function Input({
   label,
@@ -53,9 +54,11 @@ function Input({
             style={styles.eyeIcon}
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
             accessibilityLabel={
-              isPasswordVisible ? "Hide password" : "Show password"
+              isPasswordVisible
+                ? STRINGS.auth.passwordVisibility.hide
+                : STRINGS.auth.passwordVisibility.show
             }
-            accessibilityHint="Toggle password visibility"
+            accessibilityHint={STRINGS.auth.passwordVisibility.toggle}
             accessibilityRole="button"
           >
             <Ionicons

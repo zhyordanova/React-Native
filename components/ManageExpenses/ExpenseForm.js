@@ -137,11 +137,11 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
 
   return (
     <View style={styles.form}>
-      <Text style={styles.title}> Your Expense </Text>
+      <Text style={styles.title}>{STRINGS.expense.yourExpense}</Text>
       <View style={styles.inputsRow}>
         <Input
           style={styles.rowInput}
-          label="Amount"
+          label={STRINGS.expense.form.amount}
           isInvalid={!inputs.amount.isValid}
           errorText={inputs.amount.error}
           textInputConfig={{
@@ -152,11 +152,11 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         />
         <Input
           style={styles.rowInput}
-          label="Date"
+          label={STRINGS.expense.form.date}
           isInvalid={!inputs.date.isValid}
           errorText={inputs.date.error}
           textInputConfig={{
-            placeholder: "YYYY-MM-DD",
+            placeholder: STRINGS.expense.form.dateFormat,
             maxLength: 10,
             onChangeText: inputChangeHandler.bind(this, "date"),
             value: inputs.date.value,
@@ -164,7 +164,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         />
       </View>
       <Input
-        label="Description"
+        label={STRINGS.expense.form.description}
         isInvalid={!inputs.description.isValid}
         errorText={inputs.description.error}
         textInputConfig={{
@@ -174,11 +174,11 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         }}
       />
       {formIsInvalid && (
-        <Text style={styles.errorText}>Please fix the highlighted fields.</Text>
+        <Text style={styles.errorText}>{STRINGS.expense.form.invalidFields}</Text>
       )}
       <View style={styles.buttons}>
         <Button style={styles.button} mode="flat" onPress={onCancel}>
-          Cancel
+          {STRINGS.buttons.cancel}
         </Button>
         <Button style={styles.button} onPress={submitHandler}>
           {submitButtonLabel}
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
   },
   button: {
     minWidth: 120,
-    marginHorizontal: 8,
+    marginHorizontal: spacing.md,
   },
   form: {
     marginTop: 40,

@@ -1,6 +1,4 @@
-/**
- * Error types and user-friendly messages
- */
+import { STRINGS } from "../constants/strings";
 
 export const ERROR_TYPES = {
   NETWORK: "NETWORK",
@@ -17,7 +15,7 @@ function parseFirebaseError(errorData) {
   if (!errorData || !errorData.error) {
     return {
       type: ERROR_TYPES.UNKNOWN,
-      message: "An unknown error occurred. Please try again.",
+      message: STRINGS.errors.unknown,
     };
   }
 
@@ -27,37 +25,35 @@ function parseFirebaseError(errorData) {
   const errorMap = {
     EMAIL_EXISTS: {
       type: ERROR_TYPES.VALIDATION,
-      message: "Email already exists. Please use a different email or log in.",
+      message: STRINGS.errors.firebase.emailExists,
     },
     OPERATION_NOT_ALLOWED: {
       type: ERROR_TYPES.SERVER,
-      message: "This operation is not allowed. Please try again later.",
+      message: STRINGS.errors.firebase.operationNotAllowed,
     },
     TOO_MANY_ATTEMPTS_LOGIN_RETRY_ACCOUNT: {
       type: ERROR_TYPES.VALIDATION,
-      message:
-        "Too many failed login attempts. Please try again in a few minutes.",
+      message: STRINGS.errors.firebase.tooManyAttempts,
     },
     EMAIL_NOT_FOUND: {
       type: ERROR_TYPES.VALIDATION,
-      message: "Email not found. Please check your email or sign up.",
+      message: STRINGS.errors.firebase.emailNotFound,
     },
     INVALID_PASSWORD: {
       type: ERROR_TYPES.VALIDATION,
-      message: "Invalid password. Please try again.",
+      message: STRINGS.errors.firebase.invalidPassword,
     },
     USER_DISABLED: {
       type: ERROR_TYPES.UNAUTHORIZED,
-      message: "This account has been disabled. Please contact support.",
+      message: STRINGS.errors.firebase.userDisabled,
     },
     INVALID_EMAIL: {
       type: ERROR_TYPES.VALIDATION,
-      message: "Invalid email format. Please enter a valid email.",
+      message: STRINGS.errors.firebase.invalidEmail,
     },
     WEAK_PASSWORD: {
       type: ERROR_TYPES.VALIDATION,
-      message:
-        "Password is too weak. Please use at least 6 characters including letters and numbers.",
+      message: STRINGS.errors.firebase.weakPassword,
     },
   };
 
@@ -69,7 +65,7 @@ function parseFirebaseError(errorData) {
   // Generic server error
   return {
     type: ERROR_TYPES.SERVER,
-    message: `Server error: ${error.message}. Please try again later.`,
+    message: `${STRINGS.errors.serverError}${error.message}${STRINGS.errors.tryAgainLater}`,
   };
 }
 
@@ -81,8 +77,7 @@ export function parseError(error) {
   if (!error.response) {
     return {
       type: ERROR_TYPES.NETWORK,
-      message:
-        "Network error. Please check your internet connection and try again.",
+      message: STRINGS.errors.network,
       retry: true,
     };
   }
@@ -93,8 +88,7 @@ export function parseError(error) {
   if (response.status >= 500) {
     return {
       type: ERROR_TYPES.SERVER,
-      message:
-        "Server error. Please try again later. If the problem persists, contact support.",
+      message: STRINGS.errors.server,
       retry: true,
     };
   }
@@ -103,7 +97,7 @@ export function parseError(error) {
   if (response.status === 401 || response.status === 403) {
     return {
       type: ERROR_TYPES.UNAUTHORIZED,
-      message: "Unauthorized. Please log in again.",
+      message: STRINGS.errors.unauthorized,
       retry: false,
     };
   }
@@ -121,7 +115,7 @@ export function parseError(error) {
   if (response.status === 429) {
     return {
       type: ERROR_TYPES.SERVER,
-      message: "Too many requests. Please try again in a few moments.",
+      message: STRINGS.errors.tooManyRequests,
       retry: true,
     };
   }
@@ -129,7 +123,7 @@ export function parseError(error) {
   // Default error
   return {
     type: ERROR_TYPES.SERVER,
-    message: `Error: ${response.statusText || "Unknown error"}. Please try again.`,
+    message: `${STRINGS.errors.errorOccurred}${response.statusText || STRINGS.errors.unknown}${STRINGS.errors.tryAgain}`,
     retry: response.status >= 500,
   };
 }

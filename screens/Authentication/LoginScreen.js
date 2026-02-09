@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Alert } from "react-native";
 
 import { STRINGS } from "../../constants/strings";
-import AuthContent from "../../components/Auth/AuthContent";
 import { login } from "../../util/auth";
 import { useAuth } from "../../store/auth-context";
+import AuthContent from "../../components/Auth/AuthContent";
 
 function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);

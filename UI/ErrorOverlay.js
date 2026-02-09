@@ -1,18 +1,19 @@
 import { View, Text, StyleSheet } from "react-native";
 
 import { GlobalStyles } from "../constants/styles";
+import { STRINGS } from "../constants/strings";
 import Button from "./Button";
 
-const { colors } = GlobalStyles;
+const { colors, spacing } = GlobalStyles;
 const { fontSize, fontWeight } = GlobalStyles.typography;
 
 function ErrorOverlay({ message, onConfirm }) {
   return (
     <View style={styles.container}>
-      <Text style={[styles.text, styles.title]}>An error occurred!</Text>
+      <Text style={[styles.text, styles.title]}>{STRINGS.errors.occurred}</Text>
       <Text style={styles.text}>{message}</Text>
       <Button style={styles.button} onPress={onConfirm}>
-        Okay
+        {STRINGS.buttons.okay}
       </Button>
     </View>
   );
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
+    padding: spacing.xl,
     backgroundColor: colors.primary700,
   },
   button: {
@@ -34,7 +35,7 @@ const styles = StyleSheet.create({
   text: {
     color: colors.white,
     textAlign: "center",
-    marginBottom: 8,
+    marginBottom: spacing.md,
   },
   title: {
     fontSize: fontSize.large,

@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback, useMemo } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 export const UIContext = createContext({
   isLoading: false,
@@ -40,7 +46,7 @@ function UIContextProvider({ children }) {
       setError,
       clearError,
     }),
-    [isLoading, error]
+    [isLoading, error],
   );
 
   return <UIContext.Provider value={value}>{children}</UIContext.Provider>;

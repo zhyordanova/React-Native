@@ -2,6 +2,7 @@ import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { STRINGS } from "../../constants/strings";
+import { GlobalStyles } from "../../constants/styles";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 
@@ -48,7 +49,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
     <View>
       <View>
         <Input
-          label="Email Address"
+          label={STRINGS.auth.form.emailAddress}
           onUpdateValue={updateInputValueHandler.bind(this, "email")}
           value={enteredEmail}
           textInputConfig={{
@@ -62,7 +63,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
         />
         {!isLogin && (
           <Input
-            label="Confirm Email Address"
+            label={STRINGS.auth.form.confirmEmailAddress}
             onUpdateValue={updateInputValueHandler.bind(this, "confirmEmail")}
             value={enteredConfirmEmail}
             textInputConfig={{
@@ -74,7 +75,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
           />
         )}
         <Input
-          label="Password"
+          label={STRINGS.auth.form.password}
           onUpdateValue={updateInputValueHandler.bind(this, "password")}
           value={enteredPassword}
           textInputConfig={{
@@ -87,7 +88,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
         />
         {!isLogin && (
           <Input
-            label="Confirm Password"
+            label={STRINGS.auth.form.confirmPassword}
             onUpdateValue={updateInputValueHandler.bind(
               this,
               "confirmPassword",
@@ -102,7 +103,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
         )}
         <View style={styles.buttons}>
           <Button onPress={submitHandler}>
-            {isLogin ? "Log In" : "Sign Up"}
+            {isLogin ? STRINGS.buttons.login : STRINGS.buttons.signup}
           </Button>
         </View>
       </View>
@@ -114,6 +115,6 @@ export default AuthForm;
 
 const styles = StyleSheet.create({
   buttons: {
-    marginTop: 12,
+    marginTop: GlobalStyles.spacing.lg,
   },
 });

@@ -2,12 +2,14 @@ import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
 import { STRINGS } from "../../constants/strings";
-import IconButton from "../../UI/IconButton";
 import { GlobalStyles } from "../../constants/styles";
-import { ExpenseContext } from "../../store/expense-context";
-import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
-import { deleteExpense, storeExpense, updateExpense } from "../../util/http";
 import { UIContext } from "../../store/ui-context";
+import { ExpenseContext } from "../../store/expense-context";
+import { deleteExpense, storeExpense, updateExpense } from "../../util/http";
+import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
+import IconButton from "../../UI/IconButton";
+
+const { colors, spacing } = GlobalStyles;
 
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpenseContext);
@@ -68,7 +70,9 @@ function ManageExpense({ route, navigation }) {
   return (
     <View style={styles.container}>
       <ExpenseForm
-        submitButtonLabel={isEditing ? "Update" : "Add"}
+        submitButtonLabel={
+          isEditing ? STRINGS.buttons.update : STRINGS.buttons.add
+        }
         onCancel={cancelHandler}
         onSubmit={confirmHandler}
         defaultValues={expenseData}
@@ -77,7 +81,7 @@ function ManageExpense({ route, navigation }) {
         <View style={styles.deleteContainer}>
           <IconButton
             icon="trash"
-            color={GlobalStyles.colors.error500}
+            color={colors.error500}
             size={36}
             onPress={deleteExpenseHandler}
           />
@@ -92,14 +96,14 @@ export default ManageExpense;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: GlobalStyles.colors.primary800,
+    padding: spacing.xl,
+    backgroundColor: colors.primary800,
   },
   deleteContainer: {
     marginTop: 16,
-    paddingTop: 8,
+    paddingTop: spacing.md,
     borderTopWidth: 2,
-    borderTopColor: GlobalStyles.colors.primary200,
+    borderTopColor: colors.primary200,
     alignItems: "center",
   },
 });

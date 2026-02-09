@@ -2,11 +2,13 @@ import React from "react";
 import { View, Pressable, Text, StyleSheet } from "react-native";
 
 import { GlobalStyles } from "../constants/styles";
+import { getAccessibilityLabel } from "../util/helpers";
+
+const { colors, spacing, borderRadius } = GlobalStyles;
 
 function Button({ children, onPress, mode, style }) {
-  // Extract string from children for accessibility label
-  const accessibilityLabel = typeof children === 'string' ? children : 'Button';
-  
+  const accessibilityLabel = getAccessibilityLabel(children);
+
   return (
     <View style={style}>
       <Pressable
@@ -29,23 +31,23 @@ export default React.memo(Button);
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 4,
-    padding: 8,
-    backgroundColor: GlobalStyles.colors.primary500,
+    borderRadius: borderRadius.sm,
+    padding: spacing.md,
+    backgroundColor: colors.primary500,
   },
   flat: {
     backgroundColor: "transparent",
   },
   buttonText: {
-    color: GlobalStyles.colors.white,
+    color: colors.white,
     textAlign: "center",
   },
   flatText: {
-    color: GlobalStyles.colors.primary200,
+    color: colors.primary200,
   },
   pressed: {
     opacity: 0.75,
-    backgroundColor: GlobalStyles.colors.primary100,
-    borderRadius: 4,
+    backgroundColor: colors.primary100,
+    borderRadius: borderRadius.sm,
   },
 });

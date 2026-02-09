@@ -1,16 +1,10 @@
 import axios from "axios";
-import { parseError, retryWithBackoff } from "./errorHandler";
+
+import { retryWithBackoff } from "./errorHandler";
+import { throwParsedError } from "./throwError";
 
 const BACKEDND_URL =
   "https://expensetracker-8f018-default-rtdb.firebaseio.com/";
-
-function throwParsedError(error) {
-  const errorInfo = parseError(error);
-  const err = new Error(errorInfo.message);
-  err.type = errorInfo.type;
-  err.retry = errorInfo.retry;
-  throw err;
-}
 
 export async function storeExpense(expenseData) {
   try {

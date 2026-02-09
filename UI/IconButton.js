@@ -2,6 +2,10 @@ import React from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+import { GlobalStyles } from "../constants/styles";
+
+const { borderRadius, spacing } = GlobalStyles;
+
 function IconButton({ icon, size, color, onPress, accessibilityLabel }) {
   return (
     <Pressable
@@ -21,10 +25,10 @@ export default React.memo(IconButton);
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    borderRadius: 24,
-    padding: 6,
-    marginHorizontal: 8,
-    marginVertical: 2,
+    borderRadius: borderRadius.xl,
+    padding: spacing.sm,
+    marginHorizontal: spacing.sm,
+    marginVertical: spacing.xxs,
   },
   pressed: {
     opacity: 0.75,

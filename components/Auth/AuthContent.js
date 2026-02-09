@@ -7,6 +7,8 @@ import { STRINGS } from "../../constants/strings";
 import AuthForm from "./AuthForm";
 import FlatButton from "../../UI/FlatButton";
 
+const { colors, spacing, borderRadius } = GlobalStyles;
+
 function AuthContent({ isLogin, onAuthenticate }) {
   const navigation = useNavigation();
 
@@ -76,17 +78,17 @@ export default AuthContent;
 const styles = StyleSheet.create({
   authContent: {
     marginTop: 64,
-    marginHorizontal: 32,
+    marginHorizontal: spacing.xxl,
     padding: 16,
-    borderRadius: 8,
-    backgroundColor: GlobalStyles.colors.primary800,
+    borderRadius: borderRadius.lg,
+    backgroundColor: colors.primary800,
     elevation: 2,
-    shadowColor: GlobalStyles.colors.black,
+    shadowColor: colors.black,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.35,
     shadowRadius: 4,
   },
   buttons: {
-    marginTop: 8,
+    marginTop: spacing.md,
   },
 });

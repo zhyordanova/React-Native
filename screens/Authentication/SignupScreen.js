@@ -2,9 +2,9 @@ import { useState } from "react";
 import { Alert } from "react-native";
 
 import { STRINGS } from "../../constants/strings";
-import AuthContent from "../../components/Auth/AuthContent";
 import { createUser } from "../../util/auth";
 import { useAuth } from "../../store/auth-context";
+import AuthContent from "../../components/Auth/AuthContent";
 
 function SignupScreen() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);

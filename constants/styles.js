@@ -20,6 +20,7 @@ export const GlobalStyles = {
     black: '#000000',
   },
   spacing: {
+    xxs: 2,
     xs: 4,
     sm: 6,
     md: 8,

@@ -1,5 +1,7 @@
 import axios from "axios";
-import { parseError, retryWithBackoff } from "./errorHandler";
+
+import { retryWithBackoff } from "./errorHandler";
+import { throwParsedError } from "./throwError";
 
 const API_KEY = process.env.EXPO_PUBLIC_FIREBASE_API_KEY;
 
@@ -18,7 +20,7 @@ async function authenticate(email, password, mode) {
           returnSecureToken: true,
         }),
       3,
-      1000
+      1000,
     );
 
     const token = response.data.idToken;
@@ -32,11 +34,7 @@ async function authenticate(email, password, mode) {
       expirationTime,
     };
   } catch (error) {
-    const errorInfo = parseError(error);
-    const err = new Error(errorInfo.message);
-    err.type = errorInfo.type;
-    err.retry = errorInfo.retry;
-    throw err;
+    throwParsedError(error);
   }
 }
 
@@ -60,7 +58,7 @@ export async function refreshAuthToken(refreshToken) {
           refresh_token: refreshToken,
         }),
       3,
-      1000
+      1000,
     );
 
     const token = response.data.id_token;
@@ -72,11 +70,7 @@ export async function refreshAuthToken(refreshToken) {
       expirationTime,
     };
   } catch (error) {
-    const errorInfo = parseError(error);
-    const err = new Error(errorInfo.message);
-    err.type = errorInfo.type;
-    err.retry = errorInfo.retry;
-    throw err;
+    throwParsedError(error);
   }
 }
 

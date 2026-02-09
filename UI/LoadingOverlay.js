@@ -2,6 +2,8 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 import { GlobalStyles } from "../constants/styles";
 
+const { colors, spacing } = GlobalStyles;
+
 function LoadingOverlay() {
   return (
     <View style={styles.container}>
@@ -17,7 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
-    backgroundColor: GlobalStyles.colors.primary700,
+    padding: spacing.xl,
+    backgroundColor: colors.primary700,
   },
 });
