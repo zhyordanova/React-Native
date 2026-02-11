@@ -1,15 +1,19 @@
+import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
 import { GlobalStyles } from "../../constants/styles";
 import { getFormattedDate } from "../../util/date";
-import { useNavigation } from "@react-navigation/native";
+
+
+const { colors, spacing, borderRadius, typography } = GlobalStyles;
 
 function ExpensesItem({ id, description, amount, date }) {
   const navigation = useNavigation();
 
   function expensePressHandler() {
     navigation.navigate("ManageExpense", {
-        expenseId: id,
+      expenseId: id,
     });
   }
 
@@ -17,6 +21,9 @@ function ExpensesItem({ id, description, amount, date }) {
     <Pressable
       onPress={expensePressHandler}
       style={({ pressed }) => pressed && styles.pressed}
+      accessibilityRole="button"
+      accessibilityLabel={`${description} expense`}
+      accessibilityHint={`$${amount.toFixed(2)} on ${getFormattedDate(date)}`}
     >
       <View style={styles.expenseItem}>
         <View>
@@ -33,44 +40,44 @@ function ExpensesItem({ id, description, amount, date }) {
   );
 }
 
-export default ExpensesItem;
+export default React.memo(ExpensesItem);
 
 const styles = StyleSheet.create({
   pressed: {
     opacity: 0.75,
   },
   expenseItem: {
-    padding: 12,
-    marginVertical: 8,
-    backgroundColor: GlobalStyles.colors.primary500,
+    padding: spacing.lg,
+    marginVertical: spacing.md,
+    backgroundColor: colors.primary500,
     flexDirection: "row",
     justifyContent: "space-between",
-    borderRadius: 6,
+    borderRadius: borderRadius.md,
     elevation: 3,
-    shadowColor: GlobalStyles.colors.gray500,
+    shadowColor: colors.gray500,
     shadowRadius: 4,
     shadowOffset: { width: 1, height: 1 },
     shadowOpacity: 0.4,
   },
   textBase: {
-    color: GlobalStyles.colors.primary50,
+    color: colors.primary50,
   },
   description: {
-    fontSize: 16,
+    fontSize: typography.fontSize.medium,
     marginBottom: 4,
     fontWeight: "bold",
   },
   amountContainer: {
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    backgroundColor: "white",
+    paddingHorizontal: spacing.lg,
+    paddingVertical: spacing.xs,
+    backgroundColor: colors.white,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 4,
+    borderRadius: borderRadius.sm,
     minWidth: 80,
   },
   amount: {
-    color: GlobalStyles.colors.primary500,
+    color: colors.primary500,
     fontWeight: "bold",
   },
 });

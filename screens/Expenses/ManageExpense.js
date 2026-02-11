@@ -1,16 +1,22 @@
 import { useContext, useLayoutEffect } from "react";
 import { StyleSheet, View } from "react-native";
 
-import IconButton from "../UI/IconButton";
-import { GlobalStyles } from "../constants/styles";
-import { ExpenseContext } from "../store/expense-contex";
-import ExpenseForm from "../componets/ManageExpenses/ExpenseForm";
-import { deleteExpense, storeExpense, updateExpense } from "../util/http";
-import { UIContext } from "../store/ui-context";
+import { STRINGS } from "../../constants/strings";
+import { GlobalStyles } from "../../constants/styles";
+import { UIContext } from "../../store/ui-context";
+import { ExpenseContext } from "../../store/expense-context";
+import { useAuth } from "../../store/auth-context";
+import { deleteExpense, storeExpense, updateExpense } from "../../util/http";
+import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
+import IconButton from "../../UI/IconButton";
+
+const { colors, spacing } = GlobalStyles;
+const { expense, errors, buttons } = STRINGS;
 
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpenseContext);
   const { setLoading, setError, clearError } = useContext(UIContext);
+  const authCtx = useAuth();
 
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -21,7 +27,16 @@ function ManageExpense({ route, navigation }) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isEditing ? "Edit Expense" : "Add Expense",
+      title: isEditing ? expense.editTitle : expense.addTitle,
+      headerLeft: () => (
+        <IconButton
+          icon="chevron-back"
+          size={24}
+          color={GlobalStyles.colors.white}
+          onPress={() => navigation.goBack()}
+          accessibilityLabel="Go back"
+        />
+      ),
     });
   }, [navigation, isEditing]);
 
@@ -30,11 +45,11 @@ function ManageExpense({ route, navigation }) {
     clearError();
 
     try {
-      await deleteExpense(editedExpenseId);
+      await deleteExpense(editedExpenseId, authCtx.userId);
       expensesCtx.deleteExpense(editedExpenseId);
       navigation.goBack();
     } catch (error) {
-      setError("Could not delete expense - please try again later!");
+      setError(errors.deleteFailed);
     } finally {
       setLoading(false);
     }
@@ -51,14 +66,14 @@ function ManageExpense({ route, navigation }) {
     try {
       if (isEditing) {
         expensesCtx.updateExpense(editedExpenseId, expenseData);
-        await updateExpense(editedExpenseId, expenseData);
+        await updateExpense(editedExpenseId, expenseData, authCtx.userId);
       } else {
-        const id = await storeExpense(expenseData);
+        const id = await storeExpense(expenseData, authCtx.userId);
         expensesCtx.addExpense({ ...expenseData, id: id });
       }
       navigation.goBack();
     } catch (error) {
-      setError("Could not save data - please try again later!");
+      setError(errors.saveFailed);
     } finally {
       setLoading(false);
     }
@@ -67,7 +82,9 @@ function ManageExpense({ route, navigation }) {
   return (
     <View style={styles.container}>
       <ExpenseForm
-        submitButtonLabel={isEditing ? "Update" : "Add"}
+        submitButtonLabel={
+          isEditing ? buttons.update : buttons.add
+        }
         onCancel={cancelHandler}
         onSubmit={confirmHandler}
         defaultValues={expenseData}
@@ -76,7 +93,7 @@ function ManageExpense({ route, navigation }) {
         <View style={styles.deleteContainer}>
           <IconButton
             icon="trash"
-            color={GlobalStyles.colors.error500}
+            color={colors.error500}
             size={36}
             onPress={deleteExpenseHandler}
           />
@@ -91,14 +108,14 @@ export default ManageExpense;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    backgroundColor: GlobalStyles.colors.primary800,
+    padding: spacing.xl,
+    backgroundColor: colors.primary800,
   },
   deleteContainer: {
     marginTop: 16,
-    paddingTop: 8,
+    paddingTop: spacing.md,
     borderTopWidth: 2,
-    borderTopColor: GlobalStyles.colors.primary200,
+    borderTopColor: colors.primary200,
     alignItems: "center",
   },
 });
