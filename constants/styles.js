@@ -45,7 +45,6 @@ export const GlobalStyles = {
     fontWeight: {
       medium: '500',
       semibold: '600',
-      bold: 'bold',
       extrabold: '800',
     },
   },

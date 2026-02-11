@@ -4,8 +4,7 @@ import { GlobalStyles } from "../constants/styles";
 import { STRINGS } from "../constants/strings";
 import Button from "./Button";
 
-const { colors, spacing } = GlobalStyles;
-const { fontSize, fontWeight } = GlobalStyles.typography;
+const { colors, spacing, typography } = GlobalStyles;
 
 function ErrorOverlay({ message, onConfirm }) {
   return (
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.md,
   },
   title: {
-    fontSize: fontSize.large,
-    fontWeight: fontWeight.bold,
+    fontSize: typography.fontSize.large,
+    fontWeight: "bold",
   },
 });

@@ -6,6 +6,8 @@ import { login } from "../../util/auth";
 import { useAuth } from "../../store/auth-context";
 import AuthContent from "../../components/Auth/AuthContent";
 
+const { auth, errors } = STRINGS;
+
 function LoginScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [lastError, setLastError] = useState(null);
@@ -23,17 +25,17 @@ function LoginScreen() {
         authData.expirationTime,
       );
     } catch (error) {
-      const errorMessage = error.message || STRINGS.errors.loginFailed;
+      const errorMessage = error.message || errors.loginFailed;
       setLastError(error);
 
-      let alertTitle = STRINGS.auth.alerts.loginFailed;
+      let alertTitle = auth.alerts.loginFailed;
       let alertMessage = errorMessage;
-      let alertButtons = [{ text: STRINGS.auth.buttons.ok, onPress: () => {} }];
+      let alertButtons = [{ text: auth.buttons.ok, onPress: () => {} }];
 
       // Add retry button for network errors
       if (error.retry) {
         alertButtons.unshift({
-          text: STRINGS.auth.buttons.retry,
+          text: auth.buttons.retry,
           onPress: () => loginHandler({ email, password }),
         });
       }

@@ -8,6 +8,7 @@ import AuthForm from "./AuthForm";
 import FlatButton from "../../UI/FlatButton";
 
 const { colors, spacing, borderRadius } = GlobalStyles;
+const { alerts, buttons } = STRINGS.auth;
 
 function AuthContent({ isLogin, onAuthenticate }) {
   const navigation = useNavigation();
@@ -21,7 +22,7 @@ function AuthContent({ isLogin, onAuthenticate }) {
 
   function switchAuthModeHandler() {
     if (isLogin) {
-      navigation.replace("Signup");    
+      navigation.replace("Signup");
     } else {
       navigation.replace("Login");
     }
@@ -45,7 +46,10 @@ function AuthContent({ isLogin, onAuthenticate }) {
       !passwordIsValid ||
       (!isLogin && (!emailsAreEqual || !passwordsAreEqual))
     ) {
-      Alert.alert(STRINGS.auth.alerts.invalidInput, STRINGS.auth.alerts.checkCredentials);
+      Alert.alert(
+        alerts.invalidInput,
+        alerts.checkCredentials,
+      );
       setCredentialsInvalid({
         email: !emailIsValid,
         confirmEmail: !isLogin && (!emailIsValid || !emailsAreEqual),
@@ -66,7 +70,9 @@ function AuthContent({ isLogin, onAuthenticate }) {
       />
       <View style={styles.buttons}>
         <FlatButton onPress={switchAuthModeHandler}>
-          {isLogin ? STRINGS.auth.buttons.createAccount : STRINGS.auth.buttons.switchToLogin}
+          {isLogin
+            ? buttons.createAccount
+            : buttons.switchToLogin}
         </FlatButton>
       </View>
     </View>

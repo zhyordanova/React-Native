@@ -1,5 +1,7 @@
 import { STRINGS } from "../constants/strings";
 
+const { errors } = STRINGS;
+
 export const ERROR_TYPES = {
   NETWORK: "NETWORK",
   VALIDATION: "VALIDATION",
@@ -15,7 +17,7 @@ function parseFirebaseError(errorData) {
   if (!errorData || !errorData.error) {
     return {
       type: ERROR_TYPES.UNKNOWN,
-      message: STRINGS.errors.unknown,
+      message: errors.unknown,
     };
   }
 
@@ -25,35 +27,35 @@ function parseFirebaseError(errorData) {
   const errorMap = {
     EMAIL_EXISTS: {
       type: ERROR_TYPES.VALIDATION,
-      message: STRINGS.errors.firebase.emailExists,
+      message: errors.firebase.emailExists,
     },
     OPERATION_NOT_ALLOWED: {
       type: ERROR_TYPES.SERVER,
-      message: STRINGS.errors.firebase.operationNotAllowed,
+      message: errors.firebase.operationNotAllowed,
     },
     TOO_MANY_ATTEMPTS_LOGIN_RETRY_ACCOUNT: {
       type: ERROR_TYPES.VALIDATION,
-      message: STRINGS.errors.firebase.tooManyAttempts,
+      message: errors.firebase.tooManyAttempts,
     },
     EMAIL_NOT_FOUND: {
       type: ERROR_TYPES.VALIDATION,
-      message: STRINGS.errors.firebase.emailNotFound,
+      message: errors.firebase.emailNotFound,
     },
     INVALID_PASSWORD: {
       type: ERROR_TYPES.VALIDATION,
-      message: STRINGS.errors.firebase.invalidPassword,
+      message: errors.firebase.invalidPassword,
     },
     USER_DISABLED: {
       type: ERROR_TYPES.UNAUTHORIZED,
-      message: STRINGS.errors.firebase.userDisabled,
+      message: errors.firebase.userDisabled,
     },
     INVALID_EMAIL: {
       type: ERROR_TYPES.VALIDATION,
-      message: STRINGS.errors.firebase.invalidEmail,
+      message: errors.firebase.invalidEmail,
     },
     WEAK_PASSWORD: {
       type: ERROR_TYPES.VALIDATION,
-      message: STRINGS.errors.firebase.weakPassword,
+      message: errors.firebase.weakPassword,
     },
   };
 
@@ -65,7 +67,7 @@ function parseFirebaseError(errorData) {
   // Generic server error
   return {
     type: ERROR_TYPES.SERVER,
-    message: `${STRINGS.errors.serverError}${error.message}${STRINGS.errors.tryAgainLater}`,
+    message: `${errors.serverError}${error.message}${errors.tryAgainLater}`,
   };
 }
 
@@ -77,7 +79,7 @@ export function parseError(error) {
   if (!error.response) {
     return {
       type: ERROR_TYPES.NETWORK,
-      message: STRINGS.errors.network,
+      message: errors.network,
       retry: true,
     };
   }
@@ -88,7 +90,7 @@ export function parseError(error) {
   if (response.status >= 500) {
     return {
       type: ERROR_TYPES.SERVER,
-      message: STRINGS.errors.server,
+      message: errors.server,
       retry: true,
     };
   }
@@ -97,7 +99,7 @@ export function parseError(error) {
   if (response.status === 401 || response.status === 403) {
     return {
       type: ERROR_TYPES.UNAUTHORIZED,
-      message: STRINGS.errors.unauthorized,
+      message: errors.unauthorized,
       retry: false,
     };
   }
@@ -115,7 +117,7 @@ export function parseError(error) {
   if (response.status === 429) {
     return {
       type: ERROR_TYPES.SERVER,
-      message: STRINGS.errors.tooManyRequests,
+      message: errors.tooManyRequests,
       retry: true,
     };
   }
@@ -123,7 +125,7 @@ export function parseError(error) {
   // Default error
   return {
     type: ERROR_TYPES.SERVER,
-    message: `${STRINGS.errors.errorOccurred}${response.statusText || STRINGS.errors.unknown}${STRINGS.errors.tryAgain}`,
+    message: `${errors.errorOccurred}${response.statusText || errors.unknown}${errors.tryAgain}`,
     retry: response.status >= 500,
   };
 }

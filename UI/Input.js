@@ -5,8 +5,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { GlobalStyles } from "../constants/styles";
 import { STRINGS } from "../constants/strings";
 
-const { colors, spacing, borderRadius } = GlobalStyles;
-const { fontSize, fontWeight } = GlobalStyles.typography;
+const { colors, spacing, borderRadius, typography } = GlobalStyles;
+const { auth } = STRINGS;
 
 function Input({
   label,
@@ -55,10 +55,10 @@ function Input({
             onPress={() => setIsPasswordVisible(!isPasswordVisible)}
             accessibilityLabel={
               isPasswordVisible
-                ? STRINGS.auth.passwordVisibility.hide
-                : STRINGS.auth.passwordVisibility.show
+                ? auth.passwordVisibility.hide
+                : auth.passwordVisibility.show
             }
-            accessibilityHint={STRINGS.auth.passwordVisibility.toggle}
+            accessibilityHint={auth.passwordVisibility.toggle}
             accessibilityRole="button"
           >
             <Ionicons
@@ -85,10 +85,10 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   label: {
-    fontSize: fontSize.regular,
+    fontSize: typography.fontSize.regular,
     marginBottom: spacing.xs,
     color: colors.primary100,
-    fontWeight: fontWeight.medium,
+    fontWeight: typography.fontWeight.medium,
   },
   input: {
     backgroundColor: colors.primary100,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     paddingHorizontal: spacing.sm,
     borderRadius: borderRadius.md,
-    fontSize: fontSize.medium,
+    fontSize: typography.fontSize.medium,
   },
   passwordInput: {
     paddingRight: 40,
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   },
   invalidLabel: {
     color: colors.error,
-    fontWeight: fontWeight.semibold,
+    fontWeight: typography.fontWeight.semibold,
   },
   invalidInput: {
     backgroundColor: colors.errorLight,
@@ -129,8 +129,8 @@ const styles = StyleSheet.create({
   errorText: {
     marginTop: spacing.sm,
     color: colors.error,
-    fontSize: fontSize.small,
-    fontWeight: fontWeight.semibold,
+    fontSize: typography.fontSize.small,
+    fontWeight: typography.fontWeight.semibold,
     backgroundColor: colors.errorBackground,
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.xs,

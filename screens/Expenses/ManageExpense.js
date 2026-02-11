@@ -10,6 +10,7 @@ import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
 import IconButton from "../../UI/IconButton";
 
 const { colors, spacing } = GlobalStyles;
+const { expense, errors, buttons } = STRINGS;
 
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpenseContext);
@@ -24,7 +25,16 @@ function ManageExpense({ route, navigation }) {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: isEditing ? STRINGS.expense.editTitle : STRINGS.expense.addTitle,
+      title: isEditing ? expense.editTitle : expense.addTitle,
+      headerLeft: () => (
+        <IconButton
+          icon="chevron-back"
+          size={24}
+          color={GlobalStyles.colors.white}
+          onPress={() => navigation.goBack()}
+          accessibilityLabel="Go back"
+        />
+      ),
     });
   }, [navigation, isEditing]);
 
@@ -37,7 +47,7 @@ function ManageExpense({ route, navigation }) {
       expensesCtx.deleteExpense(editedExpenseId);
       navigation.goBack();
     } catch (error) {
-      setError(STRINGS.errors.deleteFailed);
+      setError(errors.deleteFailed);
     } finally {
       setLoading(false);
     }
@@ -61,7 +71,7 @@ function ManageExpense({ route, navigation }) {
       }
       navigation.goBack();
     } catch (error) {
-      setError(STRINGS.errors.saveFailed);
+      setError(errors.saveFailed);
     } finally {
       setLoading(false);
     }
@@ -71,7 +81,7 @@ function ManageExpense({ route, navigation }) {
     <View style={styles.container}>
       <ExpenseForm
         submitButtonLabel={
-          isEditing ? STRINGS.buttons.update : STRINGS.buttons.add
+          isEditing ? buttons.update : buttons.add
         }
         onCancel={cancelHandler}
         onSubmit={confirmHandler}

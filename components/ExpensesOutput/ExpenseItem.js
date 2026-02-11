@@ -7,7 +7,6 @@ import { getFormattedDate } from "../../util/date";
 
 
 const { colors, spacing, borderRadius, typography } = GlobalStyles;
-const { fontSize, fontWeight } = typography;
 
 function ExpensesItem({ id, description, amount, date }) {
   const navigation = useNavigation();
@@ -66,7 +65,7 @@ const styles = StyleSheet.create({
   description: {
     fontSize: typography.fontSize.medium,
     marginBottom: 4,
-    fontWeight: typography.fontWeight.bold,
+    fontWeight: "bold",
   },
   amountContainer: {
     paddingHorizontal: spacing.lg,
@@ -79,6 +78,6 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: colors.primary500,
-    fontWeight: typography.fontWeight.bold,
+    fontWeight: "bold",
   },
 });

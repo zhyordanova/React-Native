@@ -6,6 +6,8 @@ import { GlobalStyles } from "../../constants/styles";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 
+const { buttons, form, validation } = STRINGS.auth;
+
 function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredConfirmEmail, setEnteredConfirmEmail] = useState("");
@@ -49,7 +51,7 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
     <View>
       <View>
         <Input
-          label={STRINGS.auth.form.emailAddress}
+          label={form.emailAddress}
           onUpdateValue={updateInputValueHandler.bind(this, "email")}
           value={enteredEmail}
           textInputConfig={{
@@ -57,13 +59,11 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
             autoCapitalize: "none",
           }}
           isInvalid={emailIsInvalid}
-          errorText={
-            emailIsInvalid ? STRINGS.auth.validation.invalidEmail : ""
-          }
+          errorText={emailIsInvalid ? validation.invalidEmail : ""}
         />
         {!isLogin && (
           <Input
-            label={STRINGS.auth.form.confirmEmailAddress}
+            label={form.confirmEmailAddress}
             onUpdateValue={updateInputValueHandler.bind(this, "confirmEmail")}
             value={enteredConfirmEmail}
             textInputConfig={{
@@ -71,11 +71,13 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
               autoCapitalize: "none",
             }}
             isInvalid={emailsDontMatch}
-            errorText={emailsDontMatch ? STRINGS.auth.validation.emailMismatch : ""}
+            errorText={
+              emailsDontMatch ? validation.emailMismatch : ""
+            }
           />
         )}
         <Input
-          label={STRINGS.auth.form.password}
+          label={form.password}
           onUpdateValue={updateInputValueHandler.bind(this, "password")}
           value={enteredPassword}
           textInputConfig={{
@@ -83,12 +85,12 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
           }}
           isInvalid={passwordIsInvalid}
           errorText={
-            passwordIsInvalid ? STRINGS.auth.validation.passwordLength : ""
+            passwordIsInvalid ? validation.passwordLength : ""
           }
         />
         {!isLogin && (
           <Input
-            label={STRINGS.auth.form.confirmPassword}
+            label={form.confirmPassword}
             onUpdateValue={updateInputValueHandler.bind(
               this,
               "confirmPassword",
@@ -98,12 +100,14 @@ function AuthForm({ isLogin, onSubmit, credentialsInvalid }) {
               secureTextEntry: true,
             }}
             isInvalid={passwordsDontMatch}
-            errorText={passwordsDontMatch ? STRINGS.auth.validation.passwordMismatch : ""}
+            errorText={
+              passwordsDontMatch ? validation.passwordMismatch : ""
+            }
           />
         )}
         <View style={styles.buttons}>
           <Button onPress={submitHandler}>
-            {isLogin ? STRINGS.buttons.login : STRINGS.buttons.signup}
+            {isLogin ? buttons.login : buttons.signup}
           </Button>
         </View>
       </View>

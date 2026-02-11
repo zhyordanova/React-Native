@@ -7,8 +7,8 @@ import { STRINGS } from "../../constants/strings";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 
-const { colors, spacing } = GlobalStyles;
-const { fontSize, fontWeight } = GlobalStyles.typography;
+const { colors, spacing, typography } = GlobalStyles;
+const { expense, buttons,  } = STRINGS;
 
 function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
   const [inputs, setInputs] = useState({
@@ -41,17 +41,17 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
     return {
       amount: {
         isValid: amountIsValid,
-        error: amountIsValid ? "" : STRINGS.expense.validation.amountPositive,
+        error: amountIsValid ? "" : expense.validation.amountPositive,
       },
       date: {
         isValid: dateIsValid,
-        error: dateIsValid ? "" : STRINGS.expense.validation.dateFormat,
+        error: dateIsValid ? "" : expense.validation.dateFormat,
       },
       description: {
         isValid: descriptionIsValid,
         error: descriptionIsValid
           ? ""
-          : STRINGS.expense.validation.descriptionRequired,
+          : expense.validation.descriptionRequired,
       },
     };
   }
@@ -137,11 +137,11 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
 
   return (
     <View style={styles.form}>
-      <Text style={styles.title}>{STRINGS.expense.yourExpense}</Text>
+      <Text style={styles.title}>{expense.yourExpense}</Text>
       <View style={styles.inputsRow}>
         <Input
           style={styles.rowInput}
-          label={STRINGS.expense.form.amount}
+          label={expense.form.amount}
           isInvalid={!inputs.amount.isValid}
           errorText={inputs.amount.error}
           textInputConfig={{
@@ -152,11 +152,11 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         />
         <Input
           style={styles.rowInput}
-          label={STRINGS.expense.form.date}
+          label={ expense.form.date}
           isInvalid={!inputs.date.isValid}
           errorText={inputs.date.error}
           textInputConfig={{
-            placeholder: STRINGS.expense.form.dateFormat,
+            placeholder: expense.form.dateFormat,
             maxLength: 10,
             onChangeText: inputChangeHandler.bind(this, "date"),
             value: inputs.date.value,
@@ -164,7 +164,7 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         />
       </View>
       <Input
-        label={STRINGS.expense.form.description}
+        label={expense.form.description}
         isInvalid={!inputs.description.isValid}
         errorText={inputs.description.error}
         textInputConfig={{
@@ -174,11 +174,11 @@ function ExpenseForm({ submitButtonLabel, onCancel, onSubmit, defaultValues }) {
         }}
       />
       {formIsInvalid && (
-        <Text style={styles.errorText}>{STRINGS.expense.form.invalidFields}</Text>
+        <Text style={styles.errorText}>{expense.form.invalidFields}</Text>
       )}
       <View style={styles.buttons}>
         <Button style={styles.button} mode="flat" onPress={onCancel}>
-          {STRINGS.buttons.cancel}
+          {buttons.cancel}
         </Button>
         <Button style={styles.button} onPress={submitHandler}>
           {submitButtonLabel}
@@ -200,8 +200,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.error500,
     margin: spacing.md,
-    fontWeight: fontWeight.extrabold,
-    fontSize: fontSize.regular,
+    fontWeight: typography.fontWeight.extrabold,
+    fontSize: typography.fontSize.regular,
   },
   button: {
     minWidth: 120,
@@ -211,8 +211,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   title: {
-    fontSize: fontSize.xlarge,
-    fontWeight: fontWeight.bold,
+    fontSize: typography.fontSize.xlarge,
+    fontWeight: typography.fontWeight.bold,
     color: colors.white,
     marginVertical: spacing.xl,
     textAlign: "center",

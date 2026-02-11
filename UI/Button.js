@@ -34,6 +34,8 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.sm,
     padding: spacing.md,
     backgroundColor: colors.primary500,
+    justifyContent: "center",
+    alignItems: "center",
   },
   flat: {
     backgroundColor: "transparent",
@@ -41,6 +43,8 @@ const styles = StyleSheet.create({
   buttonText: {
     color: colors.white,
     textAlign: "center",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   flatText: {
     color: colors.primary200,
