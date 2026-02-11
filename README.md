@@ -6,6 +6,7 @@ React Native expense tracker app built with Expo, Firebase, and React Context AP
 - ✅ Add, edit, and delete expenses
 - ✅ Recent (last 7 days) and all expenses views
 - ✅ User authentication with Firebase
+- ✅ User-specific expense storage - each user sees only their own data
 - ✅ Refresh token support with auto-refresh
 - ✅ Global loading and error overlays
 - ✅ Firebase Realtime Database persistence
@@ -15,6 +16,7 @@ React Native expense tracker app built with Expo, Firebase, and React Context AP
 - ✅ Optimized FlatList rendering with getItemLayout
 - ✅ Input debouncing for better UX
 - ✅ Full accessibility support (VoiceOver/TalkBack)
+- ✅ Centralized string management for internationalization readiness
 
 ## Requirements
 - Node.js (LTS recommended)
@@ -63,12 +65,16 @@ ExpenseTracker/
 │   ├── GlobalUIOverlay.js     # Global loading/error overlay
 │   └── ...
 │
+├── constants/                  # App constants
+│   ├── strings.js             # Centralized UI text for i18n
+│   └── styles.js              # Global styling system
+│
 ├── components/                # Feature components
 │   ├── Auth/
 │   │   ├── AuthForm.js        # Centralized form validation
 │   │   └── AuthContent.js
 │   ├── ExpensesOutput/        # Expense display components
-│   │   ├── ExpensesList.js
+│   │   ├── ExpensesList.js    # Smart list with empty state handling
 │   │   ├── ExpenseItem.js
 │   │   └── ExpensesSummary.js
 │   └── ManageExpenses/
@@ -84,13 +90,13 @@ ExpenseTracker/
 │       └── ManageExpense.js
 │
 ├── store/                     # Context API state management
-│   ├── auth-context.js       # Authentication state & useAuth() hook
-│   ├── expense-context.js    # Expense CRUD & useExpense() hook
+│   ├── auth-context.js       # Authentication state & userId storage
+│   ├── expense-context.js    # Expense CRUD with user isolation
 │   └── ui-context.js         # Loading/error state & useUI() hook
 │
 ├── util/                      # Utility functions
-│   ├── auth.js               # Firebase auth functions with refresh token
-│   ├── http.js               # HTTP client & API calls with retry logic
+│   ├── auth.js               # Firebase auth with userId extraction
+│   ├── http.js               # User-specific API calls with retry logic
 │   ├── errorHandler.js       # Error classification & retry mechanism
 │   └── date.js               # Date utilities
 │
@@ -105,12 +111,14 @@ ExpenseTracker/
 
 ### Authentication (Firebase)
 - Email/password signup and login
+- User ID extraction and storage from Firebase `localId`
 - Refresh token support with automatic token refresh
 - Token expiration checking (1-hour validity)
 - Token stored securely in AsyncStorage
 - Auto-login on app startup (with loading state)
 - Error handling with user-friendly messages
 - Retry mechanism for network failures (exponential backoff)
+- User data isolation - expenses cleared on logout
 
 ### State Management (React Context)
 - **AuthContext**: Authentication state with `useAuth()` hook
@@ -160,10 +168,10 @@ ExpenseTracker/
 
 ## Backend
 
-- **Firebase Realtime Database**: Stores expenses
-- **Firebase Identity Toolkit**: User authentication
-- **HTTP Client**: axios with custom error handling
-- **Storage**: AsyncStorage for token persistence
+- **Firebase Realtime Database**: User-specific expense storage (`/users/{userId}/expenses/`)
+- **Firebase Identity Toolkit**: User authentication with userId extraction
+- **HTTP Client**: axios with user-specific API paths and error handling
+- **Storage**: AsyncStorage for token and userId persistence
 
 ## Security & Best Practices
 
@@ -217,9 +225,21 @@ ExpenseTracker/
 ✅ **Centralized String Management**
 - All user-facing text in `constants/strings.js` (STRINGS constant)
 - Organized by feature (navigation, expense, auth, errors, buttons)
-- Single source of truth for i18n/localization
+- Single source of truth for i18n/localization preparation
 - No hardcoded strings in components
 - Error messages mapped to Firebase error codes
+
+✅ **User Data Security**
+- User-specific expense storage (`/users/{userId}/expenses/`)
+- Automatic data isolation between users
+- Clear expense data on user logout
+- No cross-user data leakage
+
+✅ **Component Architecture**
+- Smart ExpensesList component handles empty state
+- Eliminated duplicate fallback text logic
+- Clean separation between UI and business logic
+- Simplified screen components
 
 ✅ **Custom Hooks for Consistency**
 - useAuth() for authentication
