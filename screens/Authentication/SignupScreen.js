@@ -22,6 +22,7 @@ function SignupScreen() {
       authCtx.authenticate(
         authData.token,
         authData.refreshToken,
+        authData.userId,
         authData.expirationTime,
       );
     } catch (error) {

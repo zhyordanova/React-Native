@@ -1,22 +1,29 @@
 import { StyleSheet, Text, View } from "react-native";
 
 import { GlobalStyles } from "../../constants/styles";
+import { STRINGS } from "../../constants/strings";
+import LoadingOverlay from "../../UI/LoadingOverlay";
 import ExpensesList from "./ExpensesList";
 import ExpensesSummary from "./ExpensesSummary";
 
-const { colors, spacing } = GlobalStyles;
-const { fontSize } = GlobalStyles.typography;
+const { colors, spacing, typography } = GlobalStyles;
 
-function ExpensesOutput({ expenses, expensesPeriod, fallbackText }) {
+function ExpensesOutput({ expenses, fallbackText, isLoading }) {
   let content = <Text style={styles.infoText}>{fallbackText}</Text>;
 
-  if (expenses.length > 0) {
+  if (isLoading) {
+    content = (
+      <View style={styles.loadingContainer}>
+        <LoadingOverlay message={STRINGS.expense.loading} />
+      </View>
+    );
+  } else if (expenses.length > 0) {
     content = <ExpensesList expenses={expenses} />;
   }
 
   return (
     <View style={styles.container}>
-      <ExpensesSummary expenses={expenses} periodName={expensesPeriod} />
+      {expenses.length > 0 && <ExpensesSummary expenses={expenses} />}
       {content}
     </View>
   );
@@ -34,8 +41,11 @@ const styles = StyleSheet.create({
   },
   infoText: {
     color: colors.white,
-    fontSize: fontSize.medium,
+    fontSize: typography.fontSize.medium,
     textAlign: "center",
     marginTop: spacing.xxl,
-  }
+  },
+  loadingContainer: {
+    marginTop: spacing.xxl,
+  },
 });

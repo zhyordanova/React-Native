@@ -10,6 +10,7 @@ export const ExpenseContext = createContext({
   expenses: [],
   addExpense: ({ description, amount, date }) => {},
   setExpenses: (expenses) => {},
+  clearExpenses: () => {},
   deleteExpense: (id) => {},
   updateExpense: (id, { description, amount, date }) => {},
 });
@@ -44,6 +45,9 @@ function expenseReducer(state, action) {
     case "DELETE":
       return state.filter((expense) => expense.id !== action.payload);
 
+    case "CLEAR":
+      return [];
+
     default:
       return state;
   }
@@ -60,6 +64,10 @@ function ExpenseContextProvider({ children }) {
     dispatch({ type: "SET", payload: expenses });
   }, []);
 
+  const clearExpenses = useCallback(() => {
+    dispatch({ type: "CLEAR" });
+  }, []);
+
   const deleteExpense = useCallback((id) => {
     dispatch({ type: "DELETE", payload: id });
   }, []);
@@ -73,10 +81,11 @@ function ExpenseContextProvider({ children }) {
       expenses: expensesState,
       addExpense: addExpense,
       setExpenses: setExpenses,
+      clearExpenses: clearExpenses,
       deleteExpense: deleteExpense,
       updateExpense: updateExpense,
     }),
-    [expensesState, addExpense, setExpenses, deleteExpense, updateExpense],
+    [expensesState, addExpense, setExpenses, clearExpenses, deleteExpense, updateExpense],
   );
 
   return (

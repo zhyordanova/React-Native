@@ -5,6 +5,7 @@ import { STRINGS } from "../../constants/strings";
 import { GlobalStyles } from "../../constants/styles";
 import { UIContext } from "../../store/ui-context";
 import { ExpenseContext } from "../../store/expense-context";
+import { useAuth } from "../../store/auth-context";
 import { deleteExpense, storeExpense, updateExpense } from "../../util/http";
 import ExpenseForm from "../../components/ManageExpenses/ExpenseForm";
 import IconButton from "../../UI/IconButton";
@@ -15,6 +16,7 @@ const { expense, errors, buttons } = STRINGS;
 function ManageExpense({ route, navigation }) {
   const expensesCtx = useContext(ExpenseContext);
   const { setLoading, setError, clearError } = useContext(UIContext);
+  const authCtx = useAuth();
 
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
@@ -43,7 +45,7 @@ function ManageExpense({ route, navigation }) {
     clearError();
 
     try {
-      await deleteExpense(editedExpenseId);
+      await deleteExpense(editedExpenseId, authCtx.userId);
       expensesCtx.deleteExpense(editedExpenseId);
       navigation.goBack();
     } catch (error) {
@@ -64,9 +66,9 @@ function ManageExpense({ route, navigation }) {
     try {
       if (isEditing) {
         expensesCtx.updateExpense(editedExpenseId, expenseData);
-        await updateExpense(editedExpenseId, expenseData);
+        await updateExpense(editedExpenseId, expenseData, authCtx.userId);
       } else {
-        const id = await storeExpense(expenseData);
+        const id = await storeExpense(expenseData, authCtx.userId);
         expensesCtx.addExpense({ ...expenseData, id: id });
       }
       navigation.goBack();

@@ -25,12 +25,14 @@ async function authenticate(email, password, mode) {
 
     const token = response.data.idToken;
     const refreshToken = response.data.refreshToken;
+    const userId = response.data.localId;
     const expiresIn = response.data.expiresIn || TOKEN_EXPIRATION_TIME;
     const expirationTime = Date.now() + parseInt(expiresIn) * 1000;
 
     return {
       token,
       refreshToken,
+      userId,
       expirationTime,
     };
   } catch (error) {

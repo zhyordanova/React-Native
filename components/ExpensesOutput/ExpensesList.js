@@ -1,7 +1,10 @@
 import React from "react";
-import { FlatList } from "react-native";
+import { FlatList, Text, StyleSheet } from "react-native";
 
+import { GlobalStyles } from "../../constants/styles";
 import ExpensesItem from "./ExpenseItem";
+
+const { colors, spacing, typography } = GlobalStyles;
 
 // Approximate height of each ExpenseItem (padding + margins + content)
 const ITEM_HEIGHT = 80;
@@ -22,8 +25,11 @@ function getItemLayout(data, index) {
   };
 }
 
-function ExpensesList({ expenses }) {
-  return (
+function ExpensesList({ expenses, fallbackText }) {
+  
+  return expenses.length === 0 ? (
+    <Text style={styles.fallbackText}>{fallbackText}</Text>
+  ) : (
     <FlatList
       data={expenses}
       renderItem={renderExpensesItem}
@@ -38,3 +44,12 @@ function ExpensesList({ expenses }) {
 }
 
 export default React.memo(ExpensesList);
+
+const styles = StyleSheet.create({
+  fallbackText: {
+    color: colors.white,
+    fontSize: typography.fontSize.medium,
+    textAlign: "center",
+    marginTop: spacing.xxl,
+  },
+});

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -9,10 +9,12 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { GlobalStyles } from "./constants/styles";
 import { STRINGS } from "./constants/strings";
-import { AppTheme } from "./config/AppTheme";
+
 import AuthContextProvider, { useAuth } from "./store/auth-context";
-import ExpenseContextProvider from "./store/expense-context";
-import UIContextProvider from "./store/ui-context";
+import ExpenseContextProvider, { useExpense } from "./store/expense-context";
+import UIContextProvider, { useUI } from "./store/ui-context";
+import { fetchExpenses } from "./util/http";
+import { AppTheme } from "./config/AppTheme";
 import GlobalUIOverlay from "./UI/GlobalUIOverlay";
 import IconButton from "./UI/IconButton";
 import ManageExpense from "./screens/Expenses/ManageExpense";
@@ -21,8 +23,10 @@ import RecentExpenses from "./screens/Expenses/RecentExpenses";
 import SignupScreen from "./screens/Authentication/SignupScreen";
 import LoginScreen from "./screens/Authentication/LoginScreen";
 
-const Stack = createNativeStackNavigator();
+const Stack = createStackNavigator();
 const BottomTabs = createBottomTabNavigator();
+
+const { errors, navigation } = STRINGS;
 
 function AuthStack() {
   return (
@@ -54,27 +58,53 @@ function AuthenticatedStack() {
 
 function ExpensesOverview() {
   const authCtx = useAuth();
+  const { setExpenses, clearExpenses } = useExpense();
+  const { setLoading, setError, clearError } = useUI();
+
+  useEffect(() => {
+    if (!authCtx.isAuthenticated) {
+      // Clear expenses when user logs out
+      clearExpenses();
+      return;
+    }
+
+    async function loadExpenses() {
+      setLoading(true);
+      clearError();
+
+      try {
+        const fetchedExpenses = await fetchExpenses(authCtx.userId);
+        setExpenses(fetchedExpenses);
+      } catch (error) {
+        setError(errors.fetchFailed);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadExpenses();
+  }, [authCtx.isAuthenticated, authCtx.userId, setExpenses, clearExpenses, setLoading, setError, clearError]);
 
   const screenOptions = useCallback(
     ({ navigation }) => ({
       tabBarStyle: { backgroundColor: GlobalStyles.colors.primary500 },
       tabBarActiveTintColor: GlobalStyles.colors.accent500,
-      headerRight: (tintColor) => (
+      headerRight: () => (
         <IconButton
           icon="add"
           size={24}
-          color={tintColor.tintColor}
+          color={GlobalStyles.colors.white}
           onPress={() => navigation.navigate("ManageExpense")}
-          accessibilityLabel={STRINGS.navigation.addExpense}
+          accessibilityLabel={navigation.addExpense}
         />
       ),
-      headerLeft: (tintColor) => (
+      headerLeft: () => (
         <IconButton
           icon="exit"
           size={24}
-          color={tintColor.tintColor}
+          color={GlobalStyles.colors.white}
           onPress={() => authCtx.logout()}
-          accessibilityLabel={STRINGS.navigation.logout}
+          accessibilityLabel={navigation.logout}
         />
       ),
     }),
@@ -87,8 +117,8 @@ function ExpensesOverview() {
         name="AllExpenses"
         component={AllExpenses}
         options={{
-          title: STRINGS.navigation.allExpenses,
-          tabBarLabel: STRINGS.navigation.allExpenses,
+          title: navigation.allExpenses,
+          tabBarLabel: navigation.allExpenses,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="calendar" size={size} color={color} />
           ),
@@ -98,8 +128,8 @@ function ExpensesOverview() {
         name="RecentExpenses"
         component={RecentExpenses}
         options={{
-          title: STRINGS.navigation.recentExpenses,
-          tabBarLabel: STRINGS.navigation.recent,
+          title: navigation.recentExpenses,
+          tabBarLabel: navigation.recent,
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="hourglass" size={size} color={color} />
           ),
