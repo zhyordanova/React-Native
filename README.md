@@ -1,85 +1,286 @@
 # ExpenseTracker
 
-React Native expense tracker app built with Expo.
+React Native expense tracker app built with Expo, Firebase, and React Context API.
 
 ## Features
-- Add, edit, and delete expenses
-- Recent (last 7 days) and all expenses views
-- Global loading and error overlays
-- Firebase Realtime Database persistence
+- ✅ Add, edit, and delete expenses
+- ✅ Recent (last 7 days) and all expenses views
+- ✅ User authentication with Firebase
+- ✅ User-specific expense storage - each user sees only their own data
+- ✅ Refresh token support with auto-refresh
+- ✅ Global loading and error overlays
+- ✅ Firebase Realtime Database persistence
+- ✅ AsyncStorage token & navigation persistence
+- ✅ Comprehensive error handling with retry logic
+- ✅ Performance optimizations (React.memo, useMemo, useCallback)
+- ✅ Optimized FlatList rendering with getItemLayout
+- ✅ Input debouncing for better UX
+- ✅ Full accessibility support (VoiceOver/TalkBack)
+- ✅ Centralized string management for internationalization readiness
 
 ## Requirements
 - Node.js (LTS recommended)
 - npm
+- Expo CLI
 
 ## Setup
+
+1. **Install dependencies:**
 ```bash
 npm install
 ```
 
+2. **Set up environment variables:**
+Copy `.env.example` to `.env` and fill in your Firebase credentials:
+```bash
+cp .env.example .env
+```
+
+3. **Configure Firebase:**
+Update `config/firebase.js` with your Firebase project details.
+
 ## Run
+
 ```bash
 npx expo start
 ```
 
-## Project structure
+Then:
+- Press `i` for iOS Simulator
+- Press `a` for Android Emulator
+- Scan QR code with Expo Go app on physical device
+
+## Project Structure
+
 ```
-App.js
-assets/
-componets/
-screens/
-store/
-UI/
-util/
+ExpenseTracker/
+├── App.js                      # Main app entry point
+├── index.js                    # App bootstrapping
+├── app.json                    # Expo configuration
+├── .env / .env.example         # Environment variables (SECRET!)
+│
+├── UI/                         # Reusable UI components
+│   ├── Button.js
+│   ├── Input.js               # Form input with password toggle
+│   ├── GlobalUIOverlay.js     # Global loading/error overlay
+│   └── ...
+│
+├── constants/                  # App constants
+│   ├── strings.js             # Centralized UI text for i18n
+│   └── styles.js              # Global styling system
+│
+├── components/                # Feature components
+│   ├── Auth/
+│   │   ├── AuthForm.js        # Centralized form validation
+│   │   └── AuthContent.js
+│   ├── ExpensesOutput/        # Expense display components
+│   │   ├── ExpensesList.js    # Smart list with empty state handling
+│   │   ├── ExpenseItem.js
+│   │   └── ExpensesSummary.js
+│   └── ManageExpenses/
+│       └── ExpenseForm.js
+│
+├── screens/                   # App screens
+│   ├── Authentication/
+│   │   ├── LoginScreen.js
+│   │   └── SignupScreen.js
+│   └── Expenses/
+│       ├── RecentExpenses.js
+│       ├── AllExpenses.js
+│       └── ManageExpense.js
+│
+├── store/                     # Context API state management
+│   ├── auth-context.js       # Authentication state & userId storage
+│   ├── expense-context.js    # Expense CRUD with user isolation
+│   └── ui-context.js         # Loading/error state & useUI() hook
+│
+├── util/                      # Utility functions
+│   ├── auth.js               # Firebase auth with userId extraction
+│   ├── http.js               # User-specific API calls with retry logic
+│   ├── errorHandler.js       # Error classification & retry mechanism
+│   └── date.js               # Date utilities
+│
+├── config/                    # App configuration
+│   ├── firebase.js           # Firebase initialization
+│   └── styles.js
+│
+└── assets/                    # Images, icons, etc.
 ```
 
-## Key folders
-- componets/: reusable UI components (forms, lists, buttons)
-- screens/: app screens (RecentExpenses, AllExpenses, ManageExpense)
-- store/: context state (expenses, UI loading/error)
-- UI/: overlays and shared UI widgets
-- util/: helpers (dates, HTTP)
+## Key Features
 
-## Navigation and main screens
-- Tabs:
-	- RecentExpenses: expenses from the last 7 days
-	- AllExpenses: full history
-- Stack:
-	- ManageExpense: add or edit an expense
+### Authentication (Firebase)
+- Email/password signup and login
+- User ID extraction and storage from Firebase `localId`
+- Refresh token support with automatic token refresh
+- Token expiration checking (1-hour validity)
+- Token stored securely in AsyncStorage
+- Auto-login on app startup (with loading state)
+- Error handling with user-friendly messages
+- Retry mechanism for network failures (exponential backoff)
+- User data isolation - expenses cleared on logout
 
-## Data flow (context → UI)
-1. UI screens call HTTP helpers in util/http.js
-2. Responses are stored in ExpenseContext
-3. UI reads context state to render lists and totals
-4. UIContext controls global loading and error overlays
+### State Management (React Context)
+- **AuthContext**: Authentication state with `useAuth()` hook
+- **ExpenseContext**: Expense CRUD operations with `useExpense()` hook
+- **UIContext**: Global loading/error overlays with `useUI()` hook
 
-## Data model
-Each expense has:
-- id: string
-- description: string
-- amount: number
-- date: JavaScript Date
+### Error Handling
+- **Centralized Error Handler** (`errorHandler.js`)
+  - Firebase error classification (network, validation, server)
+  - User-friendly error messages mapped from Firebase codes
+  - Automatic retry with exponential backoff (1s, 2s, 4s)
+  - Retry button for recoverable network errors
+- **Error Types**: NETWORK, VALIDATION, SERVER, UNKNOWN
+- **Retry Logic**: Up to 3 attempts with increasing delays
+
+### Components
+- **Input**: Universal form input with password visibility toggle
+- **AuthForm**: Centralized form validation for auth screens
+- **ExpenseForm**: Expense creation/editing with validation
+- **GlobalUIOverlay**: Global loading spinners and error alerts
+
+### Data Flow
+1. UI screens dispatch actions via context hooks
+2. Context updates state and persists to backend (Firebase) / storage (AsyncStorage)
+3. UI re-renders based on state changes
+4. Global overlays display loading/error states
+
+## Data Models
+
+### Expense
+```javascript
+{
+  id: string,        // Auto-generated by Firebase
+  description: string,
+  amount: number,
+  date: Date
+}
+```
+
+### User
+```javascript
+{
+  email: string,
+  token: string      // JWT from Firebase
+}
+```
 
 ## Backend
-- Firebase Realtime Database
-- HTTP client: axios
-- Base URL is configured in util/http.js
 
-## Scripts
-- Start dev server: `npx expo start`
+- **Firebase Realtime Database**: User-specific expense storage (`/users/{userId}/expenses/`)
+- **Firebase Identity Toolkit**: User authentication with userId extraction
+- **HTTP Client**: axios with user-specific API paths and error handling
+- **Storage**: AsyncStorage for token and userId persistence
 
-## Run on device or emulator
-- Physical device: install Expo Go, scan the QR code from the dev server
-- iOS simulator: press i in the dev server UI
-- Android emulator: press a in the dev server UI
+## Security & Best Practices
 
-## Future improvements
-- Pull-to-refresh on expense lists
-- Categories and filters
-- Export/import of data
-- Offline support and caching
+✅ **Environment Variables**
+- Sensitive data (.env) is in .gitignore
+- Never commit credentials
 
-## Troubleshooting
-- If `expo start` fails, use `npx expo start` (local CLI)
-- If reload does not work, ensure the dev server is running and the device is on the same network
-- If data does not load, verify Firebase URL and network access
+✅ **AsyncStorage Error Handling**
+- Try/catch around read/write operations
+- Graceful fallback on storage failures
+- Detailed error logging
+
+✅ **Authentication Loading State**
+- App waits for token initialization before rendering
+- Prevents brief flash of login screen on startup
+- `isInitializing` flag in AuthContext
+- Refresh token auto-loads on app start
+- Token expiration checked before use
+
+✅ **Navigation State Persistence**
+- Navigation state saved to AsyncStorage
+- Restores user's last screen on app restart
+- Error handling for corrupted state
+
+✅ **Memoization & Performance**
+- React.memo on 6+ components (ExpenseItem, ExpensesList, Button, etc.)
+- useCallback for stable function references
+- useMemo for expensive computations (filtering, context values)
+- Stable context values prevent unnecessary re-renders
+- FlatList optimizations:
+  - getItemLayout for instant scrolling
+  - initialNumToRender={10} for faster initial load
+  - maxToRenderPerBatch={10} for smooth scrolling
+  - windowSize={5} for memory efficiency
+  - removeClippedSubviews for native optimization
+
+✅ **Input Performance**
+- Debounced input handlers (300ms delay)
+- Immediate UI updates with deferred validation
+- useCallback for stable handler references
+- Cleanup on component unmount
+
+✅ **Accessibility (WCAG 2.1)**
+- accessibilityLabel on all interactive elements
+- accessibilityHint for form inputs with error messages
+- accessibilityRole="button" on all pressables
+- Password toggle with dynamic labels
+- Screen reader support (VoiceOver/TalkBack)
+- See ACCESSIBILITY.md for full details
+
+✅ **Centralized String Management**
+- All user-facing text in `constants/strings.js` (STRINGS constant)
+- Organized by feature (navigation, expense, auth, errors, buttons)
+- Single source of truth for i18n/localization preparation
+- No hardcoded strings in components
+- Error messages mapped to Firebase error codes
+
+✅ **User Data Security**
+- User-specific expense storage (`/users/{userId}/expenses/`)
+- Automatic data isolation between users
+- Clear expense data on user logout
+- No cross-user data leakage
+
+✅ **Component Architecture**
+- Smart ExpensesList component handles empty state
+- Eliminated duplicate fallback text logic
+- Clean separation between UI and business logic
+- Simplified screen components
+
+✅ **Custom Hooks for Consistency**
+- useAuth() for authentication
+- useExpense() for expense operations
+- useUI() for global state
+- Validation inside hooks prevents misuse
+
+## Future Improvements
+
+- [ ] Pull-to-refresh on expense lists
+- [ ] Categories and advanced filters
+- [ ] Export/import data functionality
+- [ ] Offline support and optimistic updates
+- [ ] Push notifications
+- [ ] User profile and settings
+- [ ] TypeScript migration
+- [ ] Unit and E2E tests
+- [ ] High contrast theme option
+- [ ] Biometric authentication (Face ID/Touch ID)
+
+## Development
+
+### Custom Hooks
+- All state is accessed via custom hooks (useAuth, useExpense, useUI)
+- Prevents direct useContext calls and improves error handling
+
+### Component Optimization
+- React.memo on ExpenseItem, ExpensesList, ExpensesSummary, Button, IconButton, FlatButton
+- Password fields apply paddingRight conditionally
+- RecentExpenses filters are memoized with useMemo
+- screenOptions in Navigation use useCallback
+- Context values are memoized with useMemo
+- FlatList with getItemLayout for O(1) item positioning
+- Input handlers debounced with 300ms delay
+- Memoized keyExtractor and getItemLayout functions
+
+### Code Quality
+- Centralized form validation in AuthForm component
+- Error messages display field-specific feedback via accessibilityHint
+- Global loading/error overlays prevent duplicate state
+- Consistent naming and file structure
+- errorHandler.js centralizes all error logic
+- Custom hooks prevent React Hooks violations
+- Comprehensive accessibility implementation (see ACCESSIBILITY.md)
